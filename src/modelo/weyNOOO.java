@@ -9,6 +9,6 @@ package modelo;
  *
  * @author DELL
  */
-public class pruebaaa {
+public class weyNOOO {
     
 }
