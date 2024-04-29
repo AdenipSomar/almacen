@@ -1,8 +1,14 @@
 
 package vistas;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.Connection;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import javax.swing.JFrame;
+import javax.swing.Timer;
 import modelo.conexion;
 
 /**
@@ -19,15 +25,41 @@ public class Sistema extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
+        ObtenerFecha();
         
         con = conexion.getConnection();
     }
+    
+    private void ObtenerFecha(){
+         // Actualiza la fecha cada segundo
+        Timer timer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Obtiene la fecha actual en el calendario del sistema
+                Calendar calendario = Calendar.getInstance();
+
+                // Obtiene el día, mes y año actual
+                int dia = calendario.get(Calendar.DAY_OF_MONTH);
+                int mes = calendario.get(Calendar.MONTH) + 1; // Se suma 1 porque los meses empiezan desde 0
+                int anio = calendario.get(Calendar.YEAR);
+
+                // Formatea la fecha como "dd/MM/yyyy"
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                String fechaFormateada = String.format("%02d/%02d/%d", dia, mes, anio);
+
+                // Actualiza el texto del JLabel con la fecha formateada
+                labelFecha.setText("FECHA: " + fechaFormateada);
+            }
+        });
+        timer.start();
+    }
+    
+    
+     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         btnSalidaMaterial = new javax.swing.JButton();
@@ -35,9 +67,20 @@ public class Sistema extends javax.swing.JFrame {
         btnProveedor = new javax.swing.JButton();
         btnPedidos = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        labelFecha = new javax.swing.JLabel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel3 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
+        lblClaveSalida = new javax.swing.JLabel();
+        lblClaveMaterialSalida = new javax.swing.JLabel();
+        lblCantidadSalida = new javax.swing.JLabel();
+        lblDetalleSalida = new javax.swing.JLabel();
+        txtClaveSalida = new javax.swing.JTextField();
+        txtCantidadSalida = new javax.swing.JTextField();
+        cbxClaveMaterialSalida = new javax.swing.JComboBox<>();
+        txtDetalleSalida = new javax.swing.JTextField();
+        btnGenerarSalida = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
@@ -45,10 +88,6 @@ public class Sistema extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jLabel1.setFont(new java.awt.Font("Britannic Bold", 0, 48)); // NOI18N
-        jLabel1.setText("TORTILLERÍA \"SHTII DXII JMA\"");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(297, 53, 720, 50));
 
         jLabel2.setText("final");
         getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 670, -1, -1));
@@ -110,36 +149,113 @@ public class Sistema extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(170, 250, 230));
 
+        jLabel1.setFont(new java.awt.Font("Britannic Bold", 0, 48)); // NOI18N
+        jLabel1.setText("TORTILLERÍA \"SHTII DXII JMA\"");
+
+        labelFecha.setFont(new java.awt.Font("Britannic Bold", 0, 24)); // NOI18N
+        labelFecha.setText("jLabel6");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1090, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(105, 105, 105)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 669, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(labelFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(18, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 160, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(27, 27, 27)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(33, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(labelFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
-        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 0, 1090, 160));
+        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 0, 1090, 110));
 
-        jLabel3.setText("Apartadi de salidas");
+        jLabel3.setFont(new java.awt.Font("Britannic Bold", 0, 36)); // NOI18N
+        jLabel3.setText("SALIDA DE MATERIAL");
+
+        lblClaveSalida.setFont(new java.awt.Font("Britannic Bold", 0, 24)); // NOI18N
+        lblClaveSalida.setText("Clave Salida: ");
+
+        lblClaveMaterialSalida.setFont(new java.awt.Font("Britannic Bold", 0, 24)); // NOI18N
+        lblClaveMaterialSalida.setText("Clave Material: ");
+
+        lblCantidadSalida.setFont(new java.awt.Font("Britannic Bold", 0, 24)); // NOI18N
+        lblCantidadSalida.setText("Cantidad: ");
+
+        lblDetalleSalida.setFont(new java.awt.Font("Britannic Bold", 0, 24)); // NOI18N
+        lblDetalleSalida.setText("Detalle: ");
+
+        cbxClaveMaterialSalida.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        btnGenerarSalida.setFont(new java.awt.Font("Britannic Bold", 0, 18)); // NOI18N
+        btnGenerarSalida.setText("Generar Salida");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(140, 140, 140)
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(701, Short.MAX_VALUE))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(319, 319, 319)
+                        .addComponent(jLabel3))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(88, 88, 88)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(lblClaveMaterialSalida)
+                                .addGap(18, 18, 18)
+                                .addComponent(cbxClaveMaterialSalida, 0, 221, Short.MAX_VALUE))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblClaveSalida)
+                                    .addComponent(lblCantidadSalida)
+                                    .addComponent(lblDetalleSalida))
+                                .addGap(39, 39, 39)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txtClaveSalida)
+                                    .addComponent(txtCantidadSalida)
+                                    .addComponent(txtDetalleSalida, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)))))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(354, 354, 354)
+                        .addComponent(btnGenerarSalida, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(386, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(66, 66, 66)
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(355, Short.MAX_VALUE))
+                .addGap(27, 27, 27)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(55, 55, 55)
+                        .addComponent(lblClaveSalida))
+                    .addComponent(txtClaveSalida, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(58, 58, 58)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblClaveMaterialSalida)
+                    .addComponent(cbxClaveMaterialSalida, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(35, 35, 35)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblCantidadSalida)
+                    .addComponent(txtCantidadSalida, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(49, 49, 49)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblDetalleSalida)
+                    .addComponent(txtDetalleSalida, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(44, 44, 44)
+                .addComponent(btnGenerarSalida, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(52, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Salida Material", jPanel3);
@@ -160,7 +276,7 @@ public class Sistema extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGap(103, 103, 103)
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(311, Short.MAX_VALUE))
+                .addContainerGap(381, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Almacén", jPanel4);
@@ -181,12 +297,12 @@ public class Sistema extends javax.swing.JFrame {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGap(82, 82, 82)
                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(340, Short.MAX_VALUE))
+                .addContainerGap(410, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Proveedor", jPanel5);
 
-        getContentPane().add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 180, 1040, 480));
+        getContentPane().add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 110, 1040, 550));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -238,9 +354,11 @@ public class Sistema extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAlmacen;
+    private javax.swing.JButton btnGenerarSalida;
     private javax.swing.JButton btnPedidos;
     private javax.swing.JButton btnProveedor;
     private javax.swing.JButton btnSalidaMaterial;
+    private javax.swing.JComboBox<String> cbxClaveMaterialSalida;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -252,5 +370,13 @@ public class Sistema extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JLabel labelFecha;
+    private javax.swing.JLabel lblCantidadSalida;
+    private javax.swing.JLabel lblClaveMaterialSalida;
+    private javax.swing.JLabel lblClaveSalida;
+    private javax.swing.JLabel lblDetalleSalida;
+    private javax.swing.JTextField txtCantidadSalida;
+    private javax.swing.JTextField txtClaveSalida;
+    private javax.swing.JTextField txtDetalleSalida;
     // End of variables declaration//GEN-END:variables
 }

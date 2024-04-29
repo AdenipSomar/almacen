@@ -25,19 +25,6 @@
     <Property name="useNullLayout" type="boolean" value="false"/>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JLabel" name="jLabel1">
-      <Properties>
-        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Britannic Bold" size="48" style="0"/>
-        </Property>
-        <Property name="text" type="java.lang.String" value="TORTILLER&#xcd;A &quot;SHTII DXII JMA&quot;"/>
-      </Properties>
-      <Constraints>
-        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="297" y="53" width="720" height="50"/>
-        </Constraint>
-      </Constraints>
-    </Component>
     <Component class="javax.swing.JLabel" name="jLabel2">
       <Properties>
         <Property name="text" type="java.lang.String" value="final"/>
@@ -133,27 +120,60 @@
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="250" y="0" width="1090" height="160"/>
+          <AbsoluteConstraints x="250" y="0" width="1090" height="110"/>
         </Constraint>
       </Constraints>
 
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="1090" max="32767" attributes="0"/>
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace min="-2" pref="105" max="-2" attributes="0"/>
+                  <Component id="jLabel1" min="-2" pref="669" max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Component id="labelFecha" min="-2" pref="280" max="-2" attributes="0"/>
+                  <EmptySpace pref="18" max="32767" attributes="0"/>
+              </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="160" max="32767" attributes="0"/>
+              <Group type="102" attributes="0">
+                  <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
+                  <Component id="jLabel1" min="-2" pref="50" max="-2" attributes="0"/>
+                  <EmptySpace pref="33" max="32767" attributes="0"/>
+              </Group>
+              <Group type="102" alignment="1" attributes="0">
+                  <EmptySpace max="32767" attributes="0"/>
+                  <Component id="labelFecha" min="-2" pref="43" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+              </Group>
           </Group>
         </DimensionLayout>
       </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JLabel" name="jLabel1">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Britannic Bold" size="48" style="0"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="TORTILLER&#xcd;A &quot;SHTII DXII JMA&quot;"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="labelFecha">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Britannic Bold" size="24" style="0"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="jLabel6"/>
+          </Properties>
+        </Component>
+      </SubComponents>
     </Container>
     <Container class="javax.swing.JTabbedPane" name="jTabbedPane1">
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="290" y="180" width="1040" height="480"/>
+          <AbsoluteConstraints x="290" y="110" width="1040" height="550"/>
         </Constraint>
       </Constraints>
 
@@ -171,19 +191,74 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="140" max="-2" attributes="0"/>
-                      <Component id="jLabel3" min="-2" pref="194" max="-2" attributes="0"/>
-                      <EmptySpace pref="701" max="32767" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="319" max="-2" attributes="0"/>
+                              <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="88" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Group type="102" attributes="0">
+                                      <Component id="lblClaveMaterialSalida" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                                      <Component id="cbxClaveMaterialSalida" pref="221" max="32767" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="lblClaveSalida" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="lblCantidadSalida" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="lblDetalleSalida" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace min="-2" pref="39" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                          <Component id="txtClaveSalida" max="32767" attributes="0"/>
+                                          <Component id="txtCantidadSalida" max="32767" attributes="0"/>
+                                          <Component id="txtDetalleSalida" pref="222" max="32767" attributes="0"/>
+                                      </Group>
+                                  </Group>
+                              </Group>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="354" max="-2" attributes="0"/>
+                              <Component id="btnGenerarSalida" min="-2" pref="206" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <EmptySpace pref="386" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="66" max="-2" attributes="0"/>
-                      <Component id="jLabel3" min="-2" pref="31" max="-2" attributes="0"/>
-                      <EmptySpace pref="355" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Component id="jLabel3" min="-2" pref="31" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="55" max="-2" attributes="0"/>
+                              <Component id="lblClaveSalida" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Component id="txtClaveSalida" min="-2" pref="33" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="58" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="lblClaveMaterialSalida" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbxClaveMaterialSalida" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="lblCantidadSalida" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtCantidadSalida" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="49" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="lblDetalleSalida" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtDetalleSalida" alignment="3" min="-2" pref="36" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="44" max="-2" attributes="0"/>
+                      <Component id="btnGenerarSalida" min="-2" pref="43" max="-2" attributes="0"/>
+                      <EmptySpace pref="52" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -191,7 +266,71 @@
           <SubComponents>
             <Component class="javax.swing.JLabel" name="jLabel3">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Apartadi de salidas"/>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Britannic Bold" size="36" style="0"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="SALIDA DE MATERIAL"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblClaveSalida">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Britannic Bold" size="24" style="0"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Clave Salida: "/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblClaveMaterialSalida">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Britannic Bold" size="24" style="0"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Clave Material: "/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblCantidadSalida">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Britannic Bold" size="24" style="0"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Cantidad: "/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblDetalleSalida">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Britannic Bold" size="24" style="0"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Detalle: "/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="txtClaveSalida">
+            </Component>
+            <Component class="javax.swing.JTextField" name="txtCantidadSalida">
+            </Component>
+            <Component class="javax.swing.JComboBox" name="cbxClaveMaterialSalida">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="4">
+                    <StringItem index="0" value="Item 1"/>
+                    <StringItem index="1" value="Item 2"/>
+                    <StringItem index="2" value="Item 3"/>
+                    <StringItem index="3" value="Item 4"/>
+                  </StringArray>
+                </Property>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JTextField" name="txtDetalleSalida">
+            </Component>
+            <Component class="javax.swing.JButton" name="btnGenerarSalida">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Britannic Bold" size="18" style="0"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Generar Salida"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -220,7 +359,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="103" max="-2" attributes="0"/>
                       <Component id="jLabel4" min="-2" pref="38" max="-2" attributes="0"/>
-                      <EmptySpace pref="311" max="32767" attributes="0"/>
+                      <EmptySpace pref="381" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -257,7 +396,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="82" max="-2" attributes="0"/>
                       <Component id="jLabel5" min="-2" pref="30" max="-2" attributes="0"/>
-                      <EmptySpace pref="340" max="32767" attributes="0"/>
+                      <EmptySpace pref="410" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
