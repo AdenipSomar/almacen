@@ -19,7 +19,7 @@ public class conexion {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             con = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
-          JOptionPane.showMessageDialog(null, "Conexion exitosa");
+          //JOptionPane.showMessageDialog(null, "Conexion exitosa");
         } catch (ClassNotFoundException e) {
             JOptionPane.showMessageDialog(null, "No se encontró el controlador de la base de datos.");
         } catch (SQLException e) {

@@ -5,21 +5,54 @@
  */
 package vistas;
 
+import java.util.List;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import modelo.Ciudad;
+import modelo.CiudadDAO;
 
 /**
  *
  * @author ramos
  */
-public class Ciudad extends javax.swing.JFrame {
+public class CiudadView extends javax.swing.JFrame {
+  Ciudad ciudad = new Ciudad(); //importar los datos de ciudad
+  CiudadDAO ciudadDao = new CiudadDAO();//importando los metodos de ciudadDAO
 
-    public Ciudad() {
+     DefaultTableModel modelo = new DefaultTableModel();
+     DefaultTableModel tmp = new DefaultTableModel();
+     
+    public CiudadView() {
         initComponents();
         this.setTitle("Ciudad Proveedor");
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setResizable(false);
+        
+        listarCiudad(); //mostrando la tabla ciudad listada desde el inicio
     }
+  public void limpiarTable(){ 
+// para que no se repitan los datos del cliente al mostrarse en las tablas
+    for (int i=0; i<modelo.getRowCount();i++){
+        modelo.removeRow(i);
+        i= i-1;
+    }
+    }
+   public void listarCiudad(){
+       //para que se puedan listar las ciudades en la tabla ciudad
+   List<Ciudad> listarCiudad = ciudadDao.listarCiudad();
+   modelo = (DefaultTableModel) tableCiudad.getModel();
+   Object[] obj = new Object[2];
+   for (int i=0; i < listarCiudad.size(); i++ ){
+   obj[0]=listarCiudad.get(i).getCodPostal();
+   obj[1]=listarCiudad.get(i).getNombreCiudad();
+   modelo.addRow(obj);
+        }
+   tableCiudad.setModel(modelo);
+   }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -33,6 +66,8 @@ public class Ciudad extends javax.swing.JFrame {
         btnAgregarCiudad = new javax.swing.JButton();
         btnModificarCiudad = new javax.swing.JButton();
         btnCancelarCiudad = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tableCiudad = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -45,12 +80,34 @@ public class Ciudad extends javax.swing.JFrame {
         lblNombreCiudad.setFont(new java.awt.Font("Britannic Bold", 0, 18)); // NOI18N
         lblNombreCiudad.setText("Nombre Ciudad:");
 
+        txtCodigoPostal.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtCodigoPostalKeyTyped(evt);
+            }
+        });
+
+        txtNombreCiudad.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtNombreCiudadKeyReleased(evt);
+            }
+        });
+
         btnAgregarCiudad.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/agregar.png"))); // NOI18N
         btnAgregarCiudad.setText("Agregar");
         btnAgregarCiudad.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        btnAgregarCiudad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarCiudadActionPerformed(evt);
+            }
+        });
 
         btnModificarCiudad.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/modificar.png"))); // NOI18N
         btnModificarCiudad.setText("Modificar");
+        btnModificarCiudad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModificarCiudadActionPerformed(evt);
+            }
+        });
 
         btnCancelarCiudad.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/cancelar.png"))); // NOI18N
         btnCancelarCiudad.setText("Cancelar");
@@ -72,12 +129,29 @@ public class Ciudad extends javax.swing.JFrame {
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(btnAgregarCiudad, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnModificarCiudad, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnCancelarCiudad, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnModificarCiudad, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnCancelarCiudad, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
+
+        tableCiudad.setFont(new java.awt.Font("Britannic Bold", 0, 14)); // NOI18N
+        tableCiudad.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Codigo Postal", "Nombre de la Ciudad"
+            }
+        ));
+        tableCiudad.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableCiudadMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tableCiudad);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -96,12 +170,15 @@ public class Ciudad extends javax.swing.JFrame {
                         .addGap(46, 46, 46)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(txtCodigoPostal)
-                            .addComponent(txtNombreCiudad, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(txtNombreCiudad, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(37, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 43, Short.MAX_VALUE)
-                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27))
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 509, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -116,14 +193,73 @@ public class Ciudad extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblNombreCiudad)
                     .addComponent(txtNombreCiudad, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 140, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(34, 34, 34))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnAgregarCiudadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarCiudadActionPerformed
+  
+        if(!"".equals(txtCodigoPostal.getText())||!"".equals(txtNombreCiudad.getText())){
+        ciudad.setCodPostal(txtCodigoPostal.getText());
+        ciudad.setNombreCiudad(txtNombreCiudad.getText());     
+        ciudadDao.registrarCiudad(ciudad); //se manda a traer del DAO ciudad la funcion registrar
+        JOptionPane.showMessageDialog(null, "Ciudad Registrado con exito!!");
+        limpiarCiudad();
+        limpiarTable();
+        listarCiudad();    
+        
+        }else{
+        JOptionPane.showMessageDialog(null, "Los campos estan vacios");
+        
+    }                    
+    }//GEN-LAST:event_btnAgregarCiudadActionPerformed
+
+    private void btnModificarCiudadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarCiudadActionPerformed
+       if("".equals(txtCodigoPostal.getText())){
+            JOptionPane.showMessageDialog(null, "Seleccione una fila");
+        }else{  
+        if(!"".equals(txtCodigoPostal.getText())||!"".equals(txtNombreCiudad.getText())){
+        ciudad.setCodPostal(txtCodigoPostal.getText());
+        ciudad.setNombreCiudad(txtNombreCiudad.getText());
+        ciudadDao.ModificarCiudad(ciudad);
+        JOptionPane.showMessageDialog(null,"Modificado con exito");
+        limpiarTable();
+        limpiarCiudad();
+        listarCiudad();
+        }else{
+        JOptionPane.showMessageDialog(null,"Los campos estan vacios");
+        }
+      }     
+    }//GEN-LAST:event_btnModificarCiudadActionPerformed
+
+    private void tableCiudadMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableCiudadMouseClicked
+     //para que cuando se seleccione una fila se muestren
+     //en los txt de la parte superior
+        int fila = tableCiudad.rowAtPoint(evt.getPoint());
+        
+        txtCodigoPostal.setText(tableCiudad.getValueAt(fila,0).toString());
+        txtNombreCiudad.setText(tableCiudad.getValueAt(fila,1).toString());      
+    }//GEN-LAST:event_tableCiudadMouseClicked
+
+    private void txtNombreCiudadKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreCiudadKeyReleased
+       //Para poder que todo el text se pase a mayusculas
+        String texto_Mayuscula= (txtNombreCiudad.getText()).toUpperCase();
+        txtNombreCiudad.setText(texto_Mayuscula);
+    }//GEN-LAST:event_txtNombreCiudadKeyReleased
+
+    private void txtCodigoPostalKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCodigoPostalKeyTyped
+        //para que solo se pueda ingresar 5 valores dentro del txtCodigo Postal
+        if(txtCodigoPostal.getText().length() >= 5)evt.consume();
+    }//GEN-LAST:event_txtCodigoPostalKeyTyped
+
+    
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -151,7 +287,7 @@ public class Ciudad extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Ciudad().setVisible(true);
+                new CiudadView().setVisible(true);
             }
         });
     }
@@ -161,9 +297,11 @@ public class Ciudad extends javax.swing.JFrame {
     private javax.swing.JButton btnCancelarCiudad;
     private javax.swing.JButton btnModificarCiudad;
     private javax.swing.JPanel jPanel7;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblCiudadProveedor;
     private javax.swing.JLabel lblCodigoPostal;
     private javax.swing.JLabel lblNombreCiudad;
+    private javax.swing.JTable tableCiudad;
     private javax.swing.JTextField txtCodigoPostal;
     private javax.swing.JTextField txtNombreCiudad;
     // End of variables declaration//GEN-END:variables
@@ -171,4 +309,8 @@ private void limpiarCiudad(){
 txtCodigoPostal.setText("");
 txtNombreCiudad.setText("");
 }
+
+  
+
+    
 }

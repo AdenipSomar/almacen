@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.Date;
 import javax.swing.JFrame;
 import javax.swing.Timer;
+import modelo.CiudadDAO;
 import modelo.conexion;
 
 /**
@@ -16,6 +17,9 @@ import modelo.conexion;
  * @author ramos
  */
 public class Sistema extends javax.swing.JFrame {
+    CiudadView cd = new CiudadView();
+    CiudadDAO ciudadDao = new CiudadDAO();
+    
 
    private Connection con;
     
@@ -527,7 +531,7 @@ public class Sistema extends javax.swing.JFrame {
     }//GEN-LAST:event_btnProveedorActionPerformed
 
     private void btnAgregarCiudadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarCiudadActionPerformed
-        Ciudad ciudad  = new Ciudad();
+        CiudadView ciudad  = new CiudadView();
         ciudad.setVisible(true);
         
     }//GEN-LAST:event_btnAgregarCiudadActionPerformed
