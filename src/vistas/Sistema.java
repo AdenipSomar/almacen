@@ -420,6 +420,12 @@ public class Sistema extends javax.swing.JFrame {
         lblStockMinimo.setFont(new java.awt.Font("Britannic Bold", 0, 24)); // NOI18N
         lblStockMinimo.setText("Stock Mínimo: ");
         jPanel4.add(lblStockMinimo, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 170, -1, -1));
+
+        txtClaveMateria.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtClaveMateriaActionPerformed(evt);
+            }
+        });
         jPanel4.add(txtClaveMateria, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 108, 203, 24));
         jPanel4.add(txtCantidadDisponible, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 174, 206, 24));
         jPanel4.add(txtNombreMateria, new org.netbeans.lib.awtextra.AbsoluteConstraints(774, 106, 214, 28));
@@ -745,7 +751,6 @@ public class Sistema extends javax.swing.JFrame {
 //TERMINAN BOTONES DE REDIRECCIONAMIENTO +++++++++++++++++++++++++++++++++++++++++++
     
     
-    
  //INICIA EL APARTADO DE PROVEEDOR   
  //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
@@ -937,6 +942,19 @@ public class Sistema extends javax.swing.JFrame {
         
     }//GEN-LAST:event_tableProveedorMouseClicked
 
+    //TERMINA EL APARTADO DE PROVEEDOR 
+    //*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    
+    
+    //INICIA EL APARTADO DE ALMACÉN
+    //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    private void txtClaveMateriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtClaveMateriaActionPerformed
+        
+        
+    }//GEN-LAST:event_txtClaveMateriaActionPerformed
+
+    
+    
     
     
     public static void main(String args[]) {
