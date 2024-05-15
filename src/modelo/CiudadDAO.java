@@ -20,8 +20,7 @@ public class CiudadDAO {
     ResultSet rs;
     
     public boolean registrarCiudad(Ciudad cd){
-        String sql = "INSERT INTO ciudad_tbl (codPostal,nombreCiudad)  VALUES (?,?)";
-        
+        String sql = "INSERT INTO ciudad_tbl (codPostal,nombreCiudad)  VALUES (?,?)";    
        try{          
            con= cn.getConnection();
            ps= con.prepareStatement(sql);
@@ -84,7 +83,47 @@ public class CiudadDAO {
     }
 }
 
-    
-    
+    public boolean eliminarCliente(String id) {
+        String sql = "DELETE FROM ciudad_tbl WHERE codPostal=?";
 
+        try {
+            ps = con.prepareStatement(sql);
+            ps.setString(1, id);
+            ps.execute();
+            return true;
+
+        } catch (SQLException e) {
+            System.out.println(e.toString());
+            return false;
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                System.out.println(ex.toString());
+            }
+        }
+
+    }
+      
+// Método para obtener la lista de ciudades desde la base de datos
+    public List<Ciudad> obtenerCiudades() {
+        List<Ciudad> ciudades = new ArrayList<>();
+        String query = "SELECT nombreCiudad, codPostal FROM ciudad_tbl";
+        try (Connection con = conexion.getConnection();
+             PreparedStatement pst = con.prepareStatement(query);
+             ResultSet rs = pst.executeQuery()) {
+
+            while (rs.next()) {
+                String nombreCiudad = rs.getString("nombreCiudad");
+                String codPostal = rs.getString("codPostal");
+                // Crear objeto Ciudad y agregarlo a la lista
+                Ciudad ciudad = new Ciudad(codPostal, nombreCiudad);
+                ciudades.add(ciudad);
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al obtener ciudades desde la base de datos: " + e.getMessage());
+        }
+        return ciudades;
+    }
+    
 }

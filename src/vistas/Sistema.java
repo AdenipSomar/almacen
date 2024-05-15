@@ -1,41 +1,93 @@
-
 package vistas;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
 import java.sql.Connection;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.Timer;
+import javax.swing.table.DefaultTableModel;
+import modelo.Ciudad;
 import modelo.CiudadDAO;
+import modelo.Eventos;
+import modelo.Proveedor;
+import modelo.ProveedorDAO;
 import modelo.conexion;
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 /**
  *
  * @author ramos
  */
 public class Sistema extends javax.swing.JFrame {
-    CiudadView cd = new CiudadView();
-    CiudadDAO ciudadDao = new CiudadDAO();
-    
 
-   private Connection con;
-    
+    CiudadView ciudad = new CiudadView();
+    CiudadDAO ciudadDao = new CiudadDAO();
+
+    Proveedor proveedor = new Proveedor();
+    ProveedorDAO proveedorDao = new ProveedorDAO();
+
+    //eventos de teclado
+    Eventos event = new Eventos();
+
+    DefaultTableModel modelo = new DefaultTableModel(); //se crea el modelo para las tablas para listar
+    DefaultTableModel tmp = new DefaultTableModel();
+    private Connection con;
+
     public Sistema() {
         initComponents();
-      
+
         this.setLocationRelativeTo(null);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ObtenerFecha();
-        
         con = conexion.getConnection();
+
+        //para que se pueda completar la información de los combos
+        AutoCompleteDecorator.decorate(cbxCiudadProveedor);
+        // Cargar datos de las ciudades en el combo box
+        cargaComboCompleto();
+        //desactivar la visibilidad del txtCodigoPostal
+        txtCodigoPostalProveedor.setVisible(true);
+        
+       
     }
-    
-    private void ObtenerFecha(){
-         // Actualiza la fecha cada segundo
+
+    private void cargaComboCompleto() {
+        // Cargar datos de las ciudades en el combo box
+        cargarCiudades();
+        mostrarCodigoPostal();
+        // Añadir listener para el cambio de selección en el combo box
+        cbxCiudadProveedor.addActionListener(e -> mostrarCodigoPostal());
+    }
+    // Método para cargar los nombres de las ciudades en el combo box
+
+    private void cargarCiudades() {
+        List<Ciudad> ciudades = ciudadDao.obtenerCiudades();
+        for (Ciudad ciudad : ciudades) {
+            cbxCiudadProveedor.addItem(ciudad.getNombreCiudad());
+        }
+    }
+
+    // Método para mostrar el código postal correspondiente cuando se selecciona una ciudad
+    private void mostrarCodigoPostal() {
+        String nombreCiudadSeleccionada = (String) cbxCiudadProveedor.getSelectedItem();
+        List<Ciudad> ciudades = ciudadDao.obtenerCiudades();
+        for (Ciudad ciudad : ciudades) {
+            if (ciudad.getNombreCiudad().equals(nombreCiudadSeleccionada)) {
+                txtCodigoPostalProveedor.setText(ciudad.getCodPostal());
+                break;
+            }
+        }
+    }
+
+    private void ObtenerFecha() {
+        // Actualiza la fecha cada segundo
         Timer timer = new Timer(1000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -57,14 +109,40 @@ public class Sistema extends javax.swing.JFrame {
         });
         timer.start();
     }
-    
-    
-     
+
+    public void limpiarTable() {
+// para que no se repitan los datos del cliente al mostrarse en las tablas
+        for (int i = 0; i < modelo.getRowCount(); i++) {
+            modelo.removeRow(i);
+            i = i - 1;
+        }
+    }
+
+    public void listarProveedor() {
+        //para que se puedan listar las ciudades en la tabla ciudad
+        List<Proveedor> listarProveedor = proveedorDao.listarProveedor();
+        modelo = (DefaultTableModel) tableProveedor.getModel();
+        Object[] obj = new Object[10];
+        for (int i = 0; i < listarProveedor.size(); i++) {
+            obj[0] = listarProveedor.get(i).getCveProveedor();
+            obj[1] = listarProveedor.get(i).getNombreEmpresa();
+            obj[2] = listarProveedor.get(i).getNombreEncargado();
+            obj[3] = listarProveedor.get(i).getApePatEncargado();
+            obj[4] = listarProveedor.get(i).getApeMatEncargado();
+            obj[5] = listarProveedor.get(i).getTelefonoProveedor();
+            obj[6] = listarProveedor.get(i).getCorreoProveedor();
+            obj[7] = listarProveedor.get(i).getRfc();
+            obj[8] = listarProveedor.get(i).getCiudadProveedor();//Es el coidgo Postal
+            obj[9] = listarProveedor.get(i).getNombreCiudadProveedor();//Es el nombre de la ciudad
+            modelo.addRow(obj);
+        }
+        tableProveedor.setModel(modelo);
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel2 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         btnSalidaMaterial = new javax.swing.JButton();
         btnAlmacen = new javax.swing.JButton();
@@ -124,8 +202,12 @@ public class Sistema extends javax.swing.JFrame {
         btnModificarProveedor = new javax.swing.JButton();
         btnCancelarProveedor = new javax.swing.JButton();
         btnDescargarProveedor = new javax.swing.JButton();
-        cbxCiudadProveedor = new javax.swing.JComboBox<>();
+        btnEliminarProveedor = new javax.swing.JButton();
         btnAgregarCiudad = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tableProveedor = new javax.swing.JTable();
+        txtCodigoPostalProveedor = new javax.swing.JTextField();
+        cbxCiudadProveedor = new javax.swing.JComboBox<>();
         jPanel8 = new javax.swing.JPanel();
         lblIngresoPedido = new javax.swing.JLabel();
         lblClaveIngreso = new javax.swing.JLabel();
@@ -148,9 +230,6 @@ public class Sistema extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jLabel2.setText("final");
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 670, -1, -1));
 
         jPanel1.setBackground(new java.awt.Color(170, 250, 230));
 
@@ -389,27 +468,118 @@ public class Sistema extends javax.swing.JFrame {
         lblApellidoPaterno.setFont(new java.awt.Font("Britannic Bold", 0, 18)); // NOI18N
         lblApellidoPaterno.setText("Apellido Paterno: ");
         jPanel5.add(lblApellidoPaterno, new org.netbeans.lib.awtextra.AbsoluteConstraints(541, 213, -1, -1));
+
+        txtClaveProveedor.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtClaveProveedorKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtClaveProveedorKeyTyped(evt);
+            }
+        });
         jPanel5.add(txtClaveProveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(266, 61, 233, 29));
+
+        txtRFCProveedor.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtRFCProveedorKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtRFCProveedorKeyTyped(evt);
+            }
+        });
         jPanel5.add(txtRFCProveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(266, 110, 233, 28));
+
+        txtTelefonoProveedor.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtTelefonoProveedorKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtTelefonoProveedorKeyTyped(evt);
+            }
+        });
         jPanel5.add(txtTelefonoProveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(266, 159, 232, 29));
+
+        txtNombreEncargado.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtNombreEncargadoKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNombreEncargadoKeyTyped(evt);
+            }
+        });
         jPanel5.add(txtNombreEncargado, new org.netbeans.lib.awtextra.AbsoluteConstraints(265, 210, 233, 28));
+
+        txtApellidoMaterno.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtApellidoMaternoKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtApellidoMaternoKeyTyped(evt);
+            }
+        });
         jPanel5.add(txtApellidoMaterno, new org.netbeans.lib.awtextra.AbsoluteConstraints(265, 258, 233, 29));
+
+        txtNombreProveedor.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtNombreProveedorKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNombreProveedorKeyTyped(evt);
+            }
+        });
         jPanel5.add(txtNombreProveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(729, 59, 287, 32));
         jPanel5.add(txtCorreoProveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(729, 109, 287, 30));
+
+        txtApellidoPaterno.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtApellidoPaternoKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtApellidoPaternoKeyTyped(evt);
+            }
+        });
         jPanel5.add(txtApellidoPaterno, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 208, 315, 32));
 
         btnAgregarProveedor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/agregar.png"))); // NOI18N
         btnAgregarProveedor.setText("Agregar");
         btnAgregarProveedor.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        btnAgregarProveedor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarProveedorActionPerformed(evt);
+            }
+        });
 
         btnModificarProveedor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/modificar.png"))); // NOI18N
         btnModificarProveedor.setText("Modificar");
+        btnModificarProveedor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModificarProveedorActionPerformed(evt);
+            }
+        });
 
         btnCancelarProveedor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/cancelar.png"))); // NOI18N
         btnCancelarProveedor.setText("Cancelar");
+        btnCancelarProveedor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarProveedorActionPerformed(evt);
+            }
+        });
 
         btnDescargarProveedor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/descarga.png"))); // NOI18N
         btnDescargarProveedor.setText("Descarga");
+        btnDescargarProveedor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDescargarProveedorActionPerformed(evt);
+            }
+        });
+
+        btnEliminarProveedor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/eliminar.png"))); // NOI18N
+        btnEliminarProveedor.setText("Eliminar");
+        btnEliminarProveedor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarProveedorActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -420,9 +590,11 @@ public class Sistema extends javax.swing.JFrame {
                 .addComponent(btnAgregarProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(40, 40, 40)
                 .addComponent(btnModificarProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
+                .addGap(30, 30, 30)
                 .addComponent(btnCancelarProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(37, 37, 37)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
+                .addComponent(btnEliminarProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(btnDescargarProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(33, 33, 33))
         );
@@ -434,14 +606,12 @@ public class Sistema extends javax.swing.JFrame {
                     .addComponent(btnAgregarProveedor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnModificarProveedor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnCancelarProveedor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnDescargarProveedor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnDescargarProveedor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnEliminarProveedor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
-        jPanel5.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(186, 448, -1, -1));
-
-        cbxCiudadProveedor.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jPanel5.add(cbxCiudadProveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(729, 157, 189, 33));
+        jPanel5.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 470, 920, -1));
 
         btnAgregarCiudad.setFont(new java.awt.Font("Britannic Bold", 0, 24)); // NOI18N
         btnAgregarCiudad.setText("+");
@@ -451,6 +621,31 @@ public class Sistema extends javax.swing.JFrame {
             }
         });
         jPanel5.add(btnAgregarCiudad, new org.netbeans.lib.awtextra.AbsoluteConstraints(950, 150, 49, 38));
+
+        tableProveedor.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Clave Proveedor", "RFC Proveedor", "NombreProveedor", "Nombre Encargado", "Apellido Paterno", "Apellido Materno", "Correo", "Teléfono", "Ciudad", "Nombre Ciudad"
+            }
+        ));
+        tableProveedor.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableProveedorMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tableProveedor);
+        if (tableProveedor.getColumnModel().getColumnCount() > 0) {
+            tableProveedor.getColumnModel().getColumn(8).setMinWidth(0);
+            tableProveedor.getColumnModel().getColumn(8).setPreferredWidth(0);
+            tableProveedor.getColumnModel().getColumn(8).setMaxWidth(0);
+        }
+
+        jPanel5.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 320, 990, 150));
+        jPanel5.add(txtCodigoPostalProveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 260, 110, 30));
+
+        jPanel5.add(cbxCiudadProveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 150, 210, 30));
 
         jTabbedPane1.addTab("Proveedor", jPanel5);
 
@@ -510,38 +705,240 @@ public class Sistema extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Ingreso Pedidos", jPanel8);
 
-        getContentPane().add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 110, 1040, 550));
+        getContentPane().add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 110, 1040, 580));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+//BOTONES DE REDIRECCIONAMIENTO HACIA LAS VENTANAS DE VISTA
+  //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++  
     private void btnSalidaMaterialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalidaMaterialActionPerformed
         jTabbedPane1.setSelectedIndex(0);
         limpiarSalidaMaterial();
     }//GEN-LAST:event_btnSalidaMaterialActionPerformed
 
     private void btnAlmacenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlmacenActionPerformed
-       jTabbedPane1.setSelectedIndex(1);
-       limpiarAlmacen();
+        jTabbedPane1.setSelectedIndex(1);
+        limpiarAlmacen();
     }//GEN-LAST:event_btnAlmacenActionPerformed
 
     private void btnProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProveedorActionPerformed
-     jTabbedPane1.setSelectedIndex(2);
-     limpiarProveedor();
+        jTabbedPane1.setSelectedIndex(2);
+        limpiarProveedor();
+        if (tableProveedor.getRowCount() == 0) {
+            listarProveedor();
+        }
+        cargarCiudades();  //carga las ciudades al combo box
+        mostrarCodigoPostal();//carga los codigos postales al txt
+        txtClaveProveedor.setEnabled(true);    //activar txt Proveedor
     }//GEN-LAST:event_btnProveedorActionPerformed
 
     private void btnAgregarCiudadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarCiudadActionPerformed
-        CiudadView ciudad  = new CiudadView();
+        CiudadView ciudad = new CiudadView();
         ciudad.setVisible(true);
-        
+
     }//GEN-LAST:event_btnAgregarCiudadActionPerformed
 
     private void btnPedidosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPedidosActionPerformed
-      jTabbedPane1.setSelectedIndex(3);
-      limpiarIngresoPedidos();
+        jTabbedPane1.setSelectedIndex(3);
+        limpiarIngresoPedidos();
     }//GEN-LAST:event_btnPedidosActionPerformed
+//TERMINAN BOTONES DE REDIRECCIONAMIENTO +++++++++++++++++++++++++++++++++++++++++++
+    
+    
+    
+ //INICIA EL APARTADO DE PROVEEDOR   
+ //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    
+    private void btnAgregarProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarProveedorActionPerformed
 
-   
+        if (!"".equals(txtClaveProveedor.getText()) || !"".equals(txtNombreProveedor.getText())) {
+            proveedor.setCveProveedor(txtClaveProveedor.getText());
+            proveedor.setNombreEmpresa(txtNombreProveedor.getText());
+            proveedor.setNombreEncargado(txtNombreEncargado.getText());
+            proveedor.setApePatEncargado(txtApellidoPaterno.getText());
+            proveedor.setApeMatEncargado(txtApellidoMaterno.getText());
+            proveedor.setTelefonoProveedor(txtTelefonoProveedor.getText());
+            proveedor.setCorreoProveedor(txtCorreoProveedor.getText());
+            proveedor.setRfc(txtRFCProveedor.getText());
+            proveedor.setCiudadProveedor(txtCodigoPostalProveedor.getText());
+
+            proveedorDao.registrarProveedor(proveedor); //se manda a traer del DAO proveedor la funcion registrar
+            JOptionPane.showMessageDialog(null, "Provedor Registrado con exito!!");
+            limpiarProveedor();
+            limpiarTable();
+            listarProveedor();
+            cargaComboCompleto();
+
+        } else {
+            JOptionPane.showMessageDialog(null, "Los campos estan vacios");
+
+        }
+
+    }//GEN-LAST:event_btnAgregarProveedorActionPerformed
+
+    private void btnModificarProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarProveedorActionPerformed
+        
+        
+        if("".equals(txtClaveProveedor.getText())){
+            JOptionPane.showMessageDialog(null, "Seleccione una fila");
+        }else{  
+        if(!"".equals(txtClaveProveedor.getText())||!"".equals(txtNombreProveedor.getText())){
+        proveedor.setCveProveedor(txtClaveProveedor.getText());
+        proveedor.setNombreEmpresa(txtNombreProveedor.getText());
+        proveedor.setNombreEncargado(txtNombreEncargado.getText());
+        proveedor.setApePatEncargado(txtApellidoPaterno.getText());
+        proveedor.setApeMatEncargado(txtApellidoMaterno.getText());
+        proveedor.setTelefonoProveedor(txtTelefonoProveedor.getText());
+        proveedor.setCorreoProveedor(txtCorreoProveedor.getText());
+        proveedor.setRfc(txtRFCProveedor.getText());
+        proveedor.setCiudadProveedor(txtCodigoPostalProveedor.getText());
+        
+        proveedorDao.ModificarProveedor(proveedor);
+        JOptionPane.showMessageDialog(null,"Modificado con exito");
+       
+        limpiarTable();
+        limpiarProveedor();
+        listarProveedor();
+        cargaComboCompleto();
+        
+        }else{
+        JOptionPane.showMessageDialog(null,"Los campos estan vacios");
+        }
+      } 
+        
+    }//GEN-LAST:event_btnModificarProveedorActionPerformed
+
+    private void btnCancelarProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarProveedorActionPerformed
+        
+        limpiarProveedor();
+        cargaComboCompleto();
+    }//GEN-LAST:event_btnCancelarProveedorActionPerformed
+
+    private void btnEliminarProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarProveedorActionPerformed
+         
+        if (!"".equals(txtClaveProveedor.getText())) {
+            int pregunta = JOptionPane.showConfirmDialog(null, "¿Estas seguro de eliminar?");
+            if (pregunta == 0) {
+                String id = txtClaveProveedor.getText();
+               proveedorDao.eliminarProveedor(id);
+                limpiarProveedor();
+                limpiarTable();
+                listarProveedor();  
+                cargaComboCompleto();
+            }
+        }  
+    }//GEN-LAST:event_btnEliminarProveedorActionPerformed
+
+    private void btnDescargarProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescargarProveedorActionPerformed
+
+    }//GEN-LAST:event_btnDescargarProveedorActionPerformed
+
+    private void txtClaveProveedorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtClaveProveedorKeyReleased
+        //Para poder que todo el text se pase a mayusculas
+        String texto_Mayuscula = (txtClaveProveedor.getText()).toUpperCase();
+        txtClaveProveedor.setText(texto_Mayuscula);
+    }//GEN-LAST:event_txtClaveProveedorKeyReleased
+
+    private void txtClaveProveedorKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtClaveProveedorKeyTyped
+        //para que solo se pueda ingresar 6 valores dentro del txtClaveProveedor
+        if (txtClaveProveedor.getText().length() >= 6) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtClaveProveedorKeyTyped
+
+    private void txtRFCProveedorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtRFCProveedorKeyReleased
+        //Para poder que todo el text se pase a mayusculas
+        String texto_Mayuscula = (txtRFCProveedor.getText()).toUpperCase();
+        txtRFCProveedor.setText(texto_Mayuscula);
+
+    }//GEN-LAST:event_txtRFCProveedorKeyReleased
+
+    private void txtTelefonoProveedorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTelefonoProveedorKeyReleased
+    }//GEN-LAST:event_txtTelefonoProveedorKeyReleased
+
+    private void txtTelefonoProveedorKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTelefonoProveedorKeyTyped
+        //para que solo se pueda ingresar 6 valores dentro del txtClaveProveedor
+        if (txtTelefonoProveedor.getText().length() >= 10) {
+            evt.consume();
+        }
+        //solo números
+        event.numberKeyPress(evt);
+
+    }//GEN-LAST:event_txtTelefonoProveedorKeyTyped
+    private void txtRFCProveedorKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtRFCProveedorKeyTyped
+        //para que solo se pueda ingresar 13 valores dentro del txtRFCProveedor 
+        if (txtRFCProveedor.getText().length() >= 13) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtRFCProveedorKeyTyped
+
+    private void txtNombreEncargadoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreEncargadoKeyReleased
+        //Para poder que todo el text se pase a mayusculas
+        String texto_Mayuscula = (txtNombreEncargado.getText()).toUpperCase();
+        txtNombreEncargado.setText(texto_Mayuscula);
+    }//GEN-LAST:event_txtNombreEncargadoKeyReleased
+
+    private void txtNombreProveedorKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreProveedorKeyTyped
+        //para que solo acepte letras y no números
+        event.textKeyPress(evt);
+    }//GEN-LAST:event_txtNombreProveedorKeyTyped
+
+    private void txtNombreProveedorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreProveedorKeyReleased
+        //Para poder que todo el text se pase a mayusculas
+        String texto_Mayuscula = (txtNombreProveedor.getText()).toUpperCase();
+        txtNombreProveedor.setText(texto_Mayuscula);
+    }//GEN-LAST:event_txtNombreProveedorKeyReleased
+
+    private void txtNombreEncargadoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreEncargadoKeyTyped
+        //para que solo acepte texto y no números
+        event.textKeyPress(evt);
+    }//GEN-LAST:event_txtNombreEncargadoKeyTyped
+
+    private void txtApellidoPaternoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtApellidoPaternoKeyReleased
+        String texto_mayuscula = txtApellidoPaterno.getText().toUpperCase();
+        txtApellidoPaterno.setText(texto_mayuscula);
+
+    }//GEN-LAST:event_txtApellidoPaternoKeyReleased
+
+    private void txtApellidoPaternoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtApellidoPaternoKeyTyped
+    //para que solo pueda ingresar texto y no números
+        event.textKeyPress(evt);
+    }//GEN-LAST:event_txtApellidoPaternoKeyTyped
+
+    private void txtApellidoMaternoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtApellidoMaternoKeyReleased
+            //para convertir el texto minuscula a mayusculas
+        String texto_mayuscula = txtApellidoMaterno.getText().toUpperCase();
+        txtApellidoMaterno.setText(texto_mayuscula);
+    }//GEN-LAST:event_txtApellidoMaternoKeyReleased
+
+    private void txtApellidoMaternoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtApellidoMaternoKeyTyped
+        //para que solo se acepte texto y no números
+        event.textKeyPress(evt);
+    }//GEN-LAST:event_txtApellidoMaternoKeyTyped
+
+    private void tableProveedorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableProveedorMouseClicked
+       txtClaveProveedor.setEnabled(false);
+      //para que cuando se seleccione una fila se muestren
+     //en los txt de la parte superior
+        int fila = tableProveedor.rowAtPoint(evt.getPoint());
+        
+        txtClaveProveedor.setText(tableProveedor.getValueAt(fila,0).toString());
+        txtNombreProveedor.setText(tableProveedor.getValueAt(fila,1).toString());
+        txtNombreEncargado.setText(tableProveedor.getValueAt(fila, 2).toString());
+        txtApellidoPaterno.setText(tableProveedor.getValueAt(fila, 3).toString());
+        txtApellidoMaterno.setText(tableProveedor.getValueAt(fila, 4).toString());
+        txtTelefonoProveedor.setText(tableProveedor.getValueAt(fila,5).toString());
+        txtCorreoProveedor.setText(tableProveedor.getValueAt(fila, 6).toString());
+        txtRFCProveedor.setText(tableProveedor.getValueAt(fila, 7).toString());
+        txtCodigoPostalProveedor.setText(tableProveedor.getValueAt(fila, 8).toString());
+        cbxCiudadProveedor.setSelectedItem(tableProveedor.getValueAt(fila, 9).toString());
+        
+        proveedorMouseClicked();
+        
+    }//GEN-LAST:event_tableProveedorMouseClicked
+
+    
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -583,6 +980,7 @@ public class Sistema extends javax.swing.JFrame {
     private javax.swing.JButton btnCancelarProveedor;
     private javax.swing.JButton btnDescargarAlmacen;
     private javax.swing.JButton btnDescargarProveedor;
+    private javax.swing.JButton btnEliminarProveedor;
     private javax.swing.JButton btnGenerarSalida;
     private javax.swing.JButton btnModificarAlmacen;
     private javax.swing.JButton btnModificarProveedor;
@@ -600,7 +998,6 @@ public class Sistema extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -613,6 +1010,7 @@ public class Sistema extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private com.toedter.calendar.JDateChooser jdcFechaIngreso;
     private javax.swing.JLabel labelFecha;
@@ -637,6 +1035,7 @@ public class Sistema extends javax.swing.JFrame {
     private javax.swing.JLabel lblRFCProveedor;
     private javax.swing.JLabel lblStockMinimo;
     private javax.swing.JLabel lblTelefonoProveedor;
+    private javax.swing.JTable tableProveedor;
     private javax.swing.JTextField txtApellidoMaterno;
     private javax.swing.JTextField txtApellidoPaterno;
     private javax.swing.JTextField txtCantidadDisponible;
@@ -646,6 +1045,7 @@ public class Sistema extends javax.swing.JFrame {
     private javax.swing.JTextField txtClaveMateria;
     private javax.swing.JTextField txtClaveProveedor;
     private javax.swing.JTextField txtClaveSalida;
+    private javax.swing.JTextField txtCodigoPostalProveedor;
     private javax.swing.JTextField txtCorreoProveedor;
     private javax.swing.JTextField txtCostoTotalIngreso;
     private javax.swing.JTextField txtDetalleIngreso;
@@ -658,43 +1058,66 @@ public class Sistema extends javax.swing.JFrame {
     private javax.swing.JTextField txtTelefonoProveedor;
     // End of variables declaration//GEN-END:variables
 
-    
     // Metodos para la limpieza de cada uno de los apartados
-    
     // Limpieza de salida Material
-    private void limpiarSalidaMaterial(){
-    txtClaveSalida.setText("");
-    cbxClaveMaterialSalida.removeAllItems();
-    txtCantidadSalida.setText("");
-    txtDetalleSalida.setText("");
+    private void limpiarSalidaMaterial() {
+        txtClaveSalida.setText("");
+        cbxClaveMaterialSalida.removeAllItems();
+        txtCantidadSalida.setText("");
+        txtDetalleSalida.setText("");
     }
-    private void limpiarAlmacen(){
-    txtClaveMateria.setText("");
-    txtNombreMateria.setText("");
-    txtCantidadDisponible.setText("");
-    txtStockMinimo.setText("");
+    private void limpiarIngresoPedidos() {
+        txtClaveIngreso.setText("");
+        txtCantidadIngreso.setText("");
+        cbxProveedorIngreso.removeAllItems();
+        cbxMateriaPrimaIngreso.removeAllItems();
+        txtDetalleIngreso.setText("");
+        jdcFechaIngreso.setDate(null);
+        txtCostoTotalIngreso.setText("");
     }
-    private void limpiarProveedor(){
-    txtClaveProveedor.setText("");
-    txtRFCProveedor.setText("");
-    txtNombreProveedor.setText("");
-    txtCorreoProveedor.setText("");
-    cbxCiudadProveedor.removeAllItems();
-    txtTelefonoProveedor.setText("");
-    txtNombreEncargado.setText("");
-    txtApellidoPaterno.setText("");
-    txtApellidoMaterno.setText("");
+    private void limpiarAlmacen() {
+        txtClaveMateria.setText("");
+        txtNombreMateria.setText("");
+        txtCantidadDisponible.setText("");
+        txtStockMinimo.setText("");
     }
-    private void limpiarIngresoPedidos(){
-    txtClaveIngreso.setText("");
-    txtCantidadIngreso.setText("");
-    cbxProveedorIngreso.removeAllItems();
-    cbxMateriaPrimaIngreso.removeAllItems();
-    txtDetalleIngreso.setText("");
-    jdcFechaIngreso.setDate(null);
-    txtCostoTotalIngreso.setText("");  
-    }
-    
 
+    
+    // Inicia Metodos para el apartado de proveedor *************
+    private void limpiarProveedor() {
+        
+        txtClaveProveedor.setText("");
+        txtRFCProveedor.setText("");
+        txtNombreProveedor.setText("");
+        txtCorreoProveedor.setText("");
+        cbxCiudadProveedor.removeAllItems();
+        txtTelefonoProveedor.setText("");
+        txtNombreEncargado.setText("");
+        txtApellidoPaterno.setText("");
+        txtApellidoMaterno.setText("");
+        agregarProveedor();
+        
+    }
+    private void agregarProveedor(){ // metodo para que los botones se acomenden
+        txtClaveProveedor.setEnabled(true);
+        
+        btnAgregarProveedor.setEnabled(true);
+        btnModificarProveedor.setEnabled(false);
+        btnCancelarProveedor.setEnabled(true);
+        btnEliminarProveedor.setEnabled(false);
+        btnDescargarProveedor.setEnabled(true);
+        
+    }
+    private void proveedorMouseClicked(){
+        btnAgregarProveedor.setEnabled(false);
+        btnModificarProveedor.setEnabled(true);
+        btnCancelarProveedor.setEnabled(true);
+        btnEliminarProveedor.setEnabled(true);
+        btnDescargarProveedor.setEnabled(false);
+    }
+    // Termona Metodos para el apartado de proveedor ***********
+    
+    
+   
 
 }
