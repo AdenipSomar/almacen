@@ -12,6 +12,8 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
+import modelo.Almacen;
+import modelo.AlmacenDAO;
 import modelo.Ciudad;
 import modelo.CiudadDAO;
 import modelo.Eventos;
@@ -31,6 +33,9 @@ public class Sistema extends javax.swing.JFrame {
 
     Proveedor proveedor = new Proveedor();
     ProveedorDAO proveedorDao = new ProveedorDAO();
+    
+    Almacen almacen = new Almacen();
+    AlmacenDAO almacenDao = new AlmacenDAO();
 
     //eventos de teclado
     Eventos event = new Eventos();
@@ -87,6 +92,7 @@ public class Sistema extends javax.swing.JFrame {
     }
 
     private void ObtenerFecha() {
+    // Metodo para obtener la fecha  en tiempo real 
         // Actualiza la fecha cada segundo
         Timer timer = new Timer(1000, new ActionListener() {
             @Override
@@ -111,13 +117,16 @@ public class Sistema extends javax.swing.JFrame {
     }
 
     public void limpiarTable() {
-// para que no se repitan los datos del cliente al mostrarse en las tablas
+//Limpia todas las tablas de manera generica
+//para que se pueda refrescar la información de todas las tablas
         for (int i = 0; i < modelo.getRowCount(); i++) {
             modelo.removeRow(i);
             i = i - 1;
         }
     }
 
+    /* Inicia el listado de las tablas de todas las clases
+    *++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
     public void listarProveedor() {
         //para que se puedan listar las ciudades en la tabla ciudad
         List<Proveedor> listarProveedor = proveedorDao.listarProveedor();
@@ -138,7 +147,25 @@ public class Sistema extends javax.swing.JFrame {
         }
         tableProveedor.setModel(modelo);
     }
-
+    
+    public void listarAlmacen() {      
+        //para que se puedan listar las materias primas que hay en el almacén
+        List<Almacen> listarAlmacen = almacenDao.listarCiudad();
+        modelo = (DefaultTableModel) tableAlmacen.getModel();
+        Object[] obj = new Object[4];
+        for (int i = 0; i < listarAlmacen.size(); i++) {
+            obj[0] = listarAlmacen.get(i).getClaveMateriaPrima();
+            obj[1] = listarAlmacen.get(i).getNombreMateria();
+            obj[2] = listarAlmacen.get(i).getStockMinimo();
+            obj[3] = listarAlmacen.get(i).getCantidadDisp();         
+            modelo.addRow(obj);
+        }
+        tableAlmacen.setModel(modelo);
+    }
+    // Termina el listado de las tablas de todas las clases
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -168,8 +195,9 @@ public class Sistema extends javax.swing.JFrame {
         jPanel6 = new javax.swing.JPanel();
         btnAgregarAlmacen = new javax.swing.JButton();
         btnModificarAlmacen = new javax.swing.JButton();
-        btnCancelarAlmacen = new javax.swing.JButton();
+        btnEliminarAlmacen = new javax.swing.JButton();
         btnDescargarAlmacen = new javax.swing.JButton();
+        btnCancelarAlmacen = new javax.swing.JButton();
         lblClaveMateria = new javax.swing.JLabel();
         lblCantidadDisp = new javax.swing.JLabel();
         lblNombreMaterial = new javax.swing.JLabel();
@@ -178,6 +206,8 @@ public class Sistema extends javax.swing.JFrame {
         txtCantidadDisponible = new javax.swing.JTextField();
         txtNombreMateria = new javax.swing.JTextField();
         txtStockMinimo = new javax.swing.JTextField();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tableAlmacen = new javax.swing.JTable();
         jPanel5 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         lblClaveProveedor = new javax.swing.JLabel();
@@ -366,15 +396,43 @@ public class Sistema extends javax.swing.JFrame {
         btnAgregarAlmacen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/agregar.png"))); // NOI18N
         btnAgregarAlmacen.setText("Agregar");
         btnAgregarAlmacen.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        btnAgregarAlmacen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarAlmacenActionPerformed(evt);
+            }
+        });
 
         btnModificarAlmacen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/modificar.png"))); // NOI18N
         btnModificarAlmacen.setText("Modificar");
+        btnModificarAlmacen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModificarAlmacenActionPerformed(evt);
+            }
+        });
 
-        btnCancelarAlmacen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/cancelar.png"))); // NOI18N
-        btnCancelarAlmacen.setText("Cancelar");
+        btnEliminarAlmacen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/eliminar.png"))); // NOI18N
+        btnEliminarAlmacen.setText("Eliminar");
+        btnEliminarAlmacen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarAlmacenActionPerformed(evt);
+            }
+        });
 
         btnDescargarAlmacen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/descarga.png"))); // NOI18N
         btnDescargarAlmacen.setText("Descarga");
+        btnDescargarAlmacen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDescargarAlmacenActionPerformed(evt);
+            }
+        });
+
+        btnCancelarAlmacen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/cancelar.png"))); // NOI18N
+        btnCancelarAlmacen.setText("Cancelar");
+        btnCancelarAlmacen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarAlmacenActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -385,11 +443,16 @@ public class Sistema extends javax.swing.JFrame {
                 .addComponent(btnAgregarAlmacen, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(40, 40, 40)
                 .addComponent(btnModificarAlmacen, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
-                .addComponent(btnCancelarAlmacen, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(37, 37, 37)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 199, Short.MAX_VALUE)
+                .addComponent(btnEliminarAlmacen, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(btnDescargarAlmacen, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(33, 33, 33))
+            .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                    .addContainerGap(397, Short.MAX_VALUE)
+                    .addComponent(btnCancelarAlmacen, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(369, 369, 369)))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -398,12 +461,17 @@ public class Sistema extends javax.swing.JFrame {
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAgregarAlmacen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnModificarAlmacen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnCancelarAlmacen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnEliminarAlmacen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnDescargarAlmacen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
+            .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel6Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(btnCancelarAlmacen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addContainerGap()))
         );
 
-        jPanel4.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(178, 438, -1, -1));
+        jPanel4.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(89, 438, 910, -1));
 
         lblClaveMateria.setFont(new java.awt.Font("Britannic Bold", 0, 24)); // NOI18N
         lblClaveMateria.setText("Clave Materia:");
@@ -426,10 +494,71 @@ public class Sistema extends javax.swing.JFrame {
                 txtClaveMateriaActionPerformed(evt);
             }
         });
+        txtClaveMateria.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtClaveMateriaKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtClaveMateriaKeyTyped(evt);
+            }
+        });
         jPanel4.add(txtClaveMateria, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 108, 203, 24));
+
+        txtCantidadDisponible.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCantidadDisponibleActionPerformed(evt);
+            }
+        });
+        txtCantidadDisponible.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtCantidadDisponibleKeyTyped(evt);
+            }
+        });
         jPanel4.add(txtCantidadDisponible, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 174, 206, 24));
+
+        txtNombreMateria.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNombreMateriaActionPerformed(evt);
+            }
+        });
+        txtNombreMateria.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtNombreMateriaKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNombreMateriaKeyTyped(evt);
+            }
+        });
         jPanel4.add(txtNombreMateria, new org.netbeans.lib.awtextra.AbsoluteConstraints(774, 106, 214, 28));
+
+        txtStockMinimo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtStockMinimoActionPerformed(evt);
+            }
+        });
+        txtStockMinimo.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtStockMinimoKeyTyped(evt);
+            }
+        });
         jPanel4.add(txtStockMinimo, new org.netbeans.lib.awtextra.AbsoluteConstraints(774, 172, 222, 28));
+
+        tableAlmacen.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Clave materia Prima", "Nombre Materia Prima", "Stock Mínimo", "Cantidad Disponible"
+            }
+        ));
+        tableAlmacen.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableAlmacenMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(tableAlmacen);
+
+        jPanel4.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 250, 820, 150));
 
         jTabbedPane1.addTab("Almacén", jPanel4);
 
@@ -725,6 +854,11 @@ public class Sistema extends javax.swing.JFrame {
     private void btnAlmacenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlmacenActionPerformed
         jTabbedPane1.setSelectedIndex(1);
         limpiarAlmacen();
+        if (tableAlmacen.getRowCount() == 0){
+        listarAlmacen();
+        }
+        
+        txtClaveMateria.setEnabled(true);
     }//GEN-LAST:event_btnAlmacenActionPerformed
 
     private void btnProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProveedorActionPerformed
@@ -753,7 +887,7 @@ public class Sistema extends javax.swing.JFrame {
     
  //INICIA EL APARTADO DE PROVEEDOR   
  //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    
+    //Botones de acción
     private void btnAgregarProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarProveedorActionPerformed
 
         if (!"".equals(txtClaveProveedor.getText()) || !"".equals(txtNombreProveedor.getText())) {
@@ -838,6 +972,7 @@ public class Sistema extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btnDescargarProveedorActionPerformed
 
+    
     private void txtClaveProveedorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtClaveProveedorKeyReleased
         //Para poder que todo el text se pase a mayusculas
         String texto_Mayuscula = (txtClaveProveedor.getText()).toUpperCase();
@@ -953,6 +1088,114 @@ public class Sistema extends javax.swing.JFrame {
         
     }//GEN-LAST:event_txtClaveMateriaActionPerformed
 
+    private void txtNombreMateriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreMateriaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtNombreMateriaActionPerformed
+
+    private void txtCantidadDisponibleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCantidadDisponibleActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCantidadDisponibleActionPerformed
+
+    private void txtStockMinimoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtStockMinimoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtStockMinimoActionPerformed
+
+    private void txtClaveMateriaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtClaveMateriaKeyReleased
+      String texto_mayuscula = txtClaveMateria.getText().toUpperCase();
+      txtClaveMateria.setText(texto_mayuscula); 
+     
+    }//GEN-LAST:event_txtClaveMateriaKeyReleased
+
+    private void txtNombreMateriaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreMateriaKeyReleased
+        String texto_mayuscula = txtNombreMateria.getText().toUpperCase();
+        txtNombreMateria.setText(texto_mayuscula);
+        event.textKeyPress(evt);
+    }//GEN-LAST:event_txtNombreMateriaKeyReleased
+
+    private void txtClaveMateriaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtClaveMateriaKeyTyped
+      //para que solo se pueda ingresar 6 valores dentro de la clave de la materia prima
+        if (txtClaveMateria.getText().length() >= 6) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtClaveMateriaKeyTyped
+
+    private void txtCantidadDisponibleKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCantidadDisponibleKeyTyped
+    //para que solo se pueda ingresar 3 valores dentro de la cantidad disponible
+        if (txtCantidadDisponible.getText().length() >= 3) {
+            evt.consume();
+        }
+        event.numberKeyPress(evt);
+    }//GEN-LAST:event_txtCantidadDisponibleKeyTyped
+
+    private void txtStockMinimoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtStockMinimoKeyTyped
+        
+        //para que solo se pueda ingresar 2 valores dentro de stock minimo
+        if (txtStockMinimo.getText().length() >= 2) {
+            evt.consume();
+        }
+        event.numberKeyPress(evt);
+    }//GEN-LAST:event_txtStockMinimoKeyTyped
+
+    private void txtNombreMateriaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreMateriaKeyTyped
+     
+        event.textKeyPress(evt);
+    }//GEN-LAST:event_txtNombreMateriaKeyTyped
+
+    //Botones de acción
+    private void btnAgregarAlmacenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarAlmacenActionPerformed
+        
+        if (!"".equals(txtClaveMateria.getText()) || !"".equals(txtNombreMateria.getText())) {
+           almacen.setClaveMateriaPrima(txtClaveMateria.getText());
+           almacen.setNombreMateria(txtNombreMateria.getText());
+           almacen.setStockMinimo(Integer.parseInt(txtStockMinimo.getText()));
+           almacen.setCantidadDisp(Integer.parseInt(txtCantidadDisponible.getText()));
+            
+
+            almacenDao.registrarAlmacen(almacen); //se manda a traer del DAO almacén la funcion registrar
+            JOptionPane.showMessageDialog(null, "Materia Prima Registrada con exito!!");
+            limpiarAlmacen();
+            limpiarTable();
+            listarAlmacen();
+            
+
+        } else {
+            JOptionPane.showMessageDialog(null, "Los campos estan vacios");
+
+        }
+        
+    }//GEN-LAST:event_btnAgregarAlmacenActionPerformed
+
+    private void btnModificarAlmacenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarAlmacenActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnModificarAlmacenActionPerformed
+
+    private void btnCancelarAlmacenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarAlmacenActionPerformed
+      limpiarAlmacen();
+    }//GEN-LAST:event_btnCancelarAlmacenActionPerformed
+
+    private void btnEliminarAlmacenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarAlmacenActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnEliminarAlmacenActionPerformed
+
+    private void btnDescargarAlmacenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescargarAlmacenActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnDescargarAlmacenActionPerformed
+
+    private void tableAlmacenMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableAlmacenMouseClicked
+         txtClaveMateria.setEnabled(false);
+      //para que cuando se seleccione una fila se muestren
+     //en los txt de la parte superior
+        int fila = tableAlmacen.rowAtPoint(evt.getPoint());
+        
+        txtClaveMateria.setText(tableAlmacen.getValueAt(fila,0).toString());
+        txtNombreMateria.setText(tableAlmacen.getValueAt(fila,1).toString());
+        txtStockMinimo.setText(tableAlmacen.getValueAt(fila, 2).toString());
+        txtCantidadDisponible.setText(tableAlmacen.getValueAt(fila, 3).toString());
+        
+        almacenMouseClicked();
+        
+    }//GEN-LAST:event_tableAlmacenMouseClicked
+
     
     
     
@@ -998,6 +1241,7 @@ public class Sistema extends javax.swing.JFrame {
     private javax.swing.JButton btnCancelarProveedor;
     private javax.swing.JButton btnDescargarAlmacen;
     private javax.swing.JButton btnDescargarProveedor;
+    private javax.swing.JButton btnEliminarAlmacen;
     private javax.swing.JButton btnEliminarProveedor;
     private javax.swing.JButton btnGenerarSalida;
     private javax.swing.JButton btnModificarAlmacen;
@@ -1029,6 +1273,7 @@ public class Sistema extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
     private com.toedter.calendar.JDateChooser jdcFechaIngreso;
     private javax.swing.JLabel labelFecha;
@@ -1053,6 +1298,7 @@ public class Sistema extends javax.swing.JFrame {
     private javax.swing.JLabel lblRFCProveedor;
     private javax.swing.JLabel lblStockMinimo;
     private javax.swing.JLabel lblTelefonoProveedor;
+    private javax.swing.JTable tableAlmacen;
     private javax.swing.JTable tableProveedor;
     private javax.swing.JTextField txtApellidoMaterno;
     private javax.swing.JTextField txtApellidoPaterno;
@@ -1093,13 +1339,7 @@ public class Sistema extends javax.swing.JFrame {
         jdcFechaIngreso.setDate(null);
         txtCostoTotalIngreso.setText("");
     }
-    private void limpiarAlmacen() {
-        txtClaveMateria.setText("");
-        txtNombreMateria.setText("");
-        txtCantidadDisponible.setText("");
-        txtStockMinimo.setText("");
-    }
-
+    
     
     // Inicia Metodos para el apartado de proveedor *************
     private void limpiarProveedor() {
@@ -1133,9 +1373,37 @@ public class Sistema extends javax.swing.JFrame {
         btnEliminarProveedor.setEnabled(true);
         btnDescargarProveedor.setEnabled(false);
     }
-    // Termona Metodos para el apartado de proveedor ***********
+    // Termina Metodos para el apartado de proveedor ***********
     
+    //Inicia metodos para el apartado de Almacén ***********
+    private void limpiarAlmacen() {
+        txtClaveMateria.setText("");
+        txtNombreMateria.setText("");
+        txtCantidadDisponible.setText("");
+        txtStockMinimo.setText("");
+        
+        agregarAlmacen();
+    }
+    private void agregarAlmacen(){
+        txtClaveMateria.setEnabled(true);
+        
+        btnAgregarAlmacen.setEnabled(true);
+        btnModificarAlmacen.setEnabled(false);
+        btnCancelarAlmacen.setEnabled(true);
+        btnEliminarAlmacen.setEnabled(false);
+        btnDescargarAlmacen.setEnabled(true);
     
+    }
+    private void almacenMouseClicked(){
+   
+        btnAgregarAlmacen.setEnabled(false);
+        btnModificarAlmacen.setEnabled(true);
+        btnCancelarAlmacen.setEnabled(true);
+        btnEliminarAlmacen.setEnabled(true);
+        btnDescargarAlmacen.setEnabled(false);
+    
+    }
+    //Termina metodos para el apartado de proveedor****************
    
 
 }
