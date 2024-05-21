@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.sql.Connection;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -17,6 +18,8 @@ import modelo.AlmacenDAO;
 import modelo.Ciudad;
 import modelo.CiudadDAO;
 import modelo.Eventos;
+import modelo.IngresoPedidos;
+import modelo.IngresoPedidosDAO;
 import modelo.Proveedor;
 import modelo.ProveedorDAO;
 import modelo.conexion;
@@ -36,6 +39,9 @@ public class Sistema extends javax.swing.JFrame {
     
     Almacen almacen = new Almacen();
     AlmacenDAO almacenDao = new AlmacenDAO();
+    
+    IngresoPedidos ingresoPedidos = new IngresoPedidos();
+    IngresoPedidosDAO ingresoPedidosDao = new IngresoPedidosDAO();
 
     //eventos de teclado
     Eventos event = new Eventos();
@@ -43,6 +49,8 @@ public class Sistema extends javax.swing.JFrame {
     DefaultTableModel modelo = new DefaultTableModel(); //se crea el modelo para las tablas para listar
     DefaultTableModel tmp = new DefaultTableModel();
     private Connection con;
+    
+    
 
     public Sistema() {
         initComponents();
@@ -55,14 +63,19 @@ public class Sistema extends javax.swing.JFrame {
 
         //para que se pueda completar la información de los combos
         AutoCompleteDecorator.decorate(cbxCiudadProveedor);
-        // Cargar datos de las ciudades en el combo box
-        cargaComboCompleto();
-        //desactivar la visibilidad del txtCodigoPostal
+        AutoCompleteDecorator.decorate(cbxProveedorIngreso);
+        
+        cargaComboCompleto(); // Cargar datos de las ciudades en el combo box
+        
+        cargaComboCompletoIngreso(); //Carga datos de los proveedores en el combo box 
+        
         txtCodigoPostalProveedor.setVisible(true);
         
        
     }
 
+    //Parte de carga del combo de  ciudad en la parte de Proveedor
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     private void cargaComboCompleto() {
         // Cargar datos de las ciudades en el combo box
         cargarCiudades();
@@ -71,14 +84,12 @@ public class Sistema extends javax.swing.JFrame {
         cbxCiudadProveedor.addActionListener(e -> mostrarCodigoPostal());
     }
     // Método para cargar los nombres de las ciudades en el combo box
-
     private void cargarCiudades() {
         List<Ciudad> ciudades = ciudadDao.obtenerCiudades();
         for (Ciudad ciudad : ciudades) {
             cbxCiudadProveedor.addItem(ciudad.getNombreCiudad());
         }
     }
-
     // Método para mostrar el código postal correspondiente cuando se selecciona una ciudad
     private void mostrarCodigoPostal() {
         String nombreCiudadSeleccionada = (String) cbxCiudadProveedor.getSelectedItem();
@@ -90,6 +101,56 @@ public class Sistema extends javax.swing.JFrame {
             }
         }
     }
+    //Termina la parte de la carga de combo de ciudad en la parte de Proveedor
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    
+    
+    //Carga del combo de Proveedor en la parte de IngresoPedidos
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    private void cargaComboCompletoIngreso(){
+    cargarProveedor();
+    mostrarClaveProveedor();
+    cbxProveedorIngreso.addActionListener(e -> mostrarClaveProveedor());
+    
+    cargaMateria();
+    mostrarClaveMateria();
+    cbxMateriaPrimaIngreso.addActionListener(e -> mostrarClaveMateria());
+    }
+    private void cargarProveedor(){
+      List<Proveedor> proveedores = proveedorDao.obtenerProveedor();
+        for (Proveedor proveedor : proveedores) {
+            cbxProveedorIngreso.addItem(proveedor.getNombreEmpresa());
+        }
+    }
+    private void mostrarClaveProveedor(){
+    String nombreProveedorSeleccionada = (String) cbxProveedorIngreso.getSelectedItem();
+        List<Proveedor> proveedores = proveedorDao.obtenerProveedor();
+        for (Proveedor proveedor : proveedores) {
+            if (proveedor.getNombreEmpresa().equals(nombreProveedorSeleccionada)) {
+                txtClaveProveedorIngreso.setText(proveedor.getCveProveedor());
+                break;
+            }
+        }  
+    } 
+    private void cargaMateria(){
+     List<Almacen> materias = almacenDao.obtenerMateria();
+        for (Almacen almacen : materias) {
+            cbxMateriaPrimaIngreso.addItem(almacen.getNombreMateria());
+        }
+    }
+    private void mostrarClaveMateria(){
+     String nombreMateriaSeleccionada = (String) cbxMateriaPrimaIngreso.getSelectedItem();
+        List<Almacen> materias = almacenDao.obtenerMateria();
+        for (Almacen almacen : materias) {
+            if (almacen.getNombreMateria().equals(nombreMateriaSeleccionada)) {
+                txtClaveMateriaIngreso.setText(almacen.getClaveMateriaPrima());
+                break;
+            }
+        }  
+    }  
+    //Termina la parte del combo proveedor parte de IngresoPedidos
+    //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    
 
     private void ObtenerFecha() {
     // Metodo para obtener la fecha  en tiempo real 
@@ -115,7 +176,6 @@ public class Sistema extends javax.swing.JFrame {
         });
         timer.start();
     }
-
     public void limpiarTable() {
 //Limpia todas las tablas de manera generica
 //para que se pueda refrescar la información de todas las tablas
@@ -124,7 +184,8 @@ public class Sistema extends javax.swing.JFrame {
             i = i - 1;
         }
     }
-
+    
+    
     /* Inicia el listado de las tablas de todas las clases
     *++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
     public void listarProveedor() {
@@ -146,11 +207,10 @@ public class Sistema extends javax.swing.JFrame {
             modelo.addRow(obj);
         }
         tableProveedor.setModel(modelo);
-    }
-    
+    }   
     public void listarAlmacen() {      
         //para que se puedan listar las materias primas que hay en el almacén
-        List<Almacen> listarAlmacen = almacenDao.listarCiudad();
+        List<Almacen> listarAlmacen = almacenDao.listarAlamacen();
         modelo = (DefaultTableModel) tableAlmacen.getModel();
         Object[] obj = new Object[4];
         for (int i = 0; i < listarAlmacen.size(); i++) {
@@ -161,6 +221,30 @@ public class Sistema extends javax.swing.JFrame {
             modelo.addRow(obj);
         }
         tableAlmacen.setModel(modelo);
+    }
+    public void listarIngresoPedido(){  
+        limpiarTable();
+        //para que se puedan listar los ingresos de pedidos que se hicieron
+        List<IngresoPedidos> listarIngreso = ingresoPedidosDao.listarIngresoPedido();
+        modelo = (DefaultTableModel) tableIngresoPedidos.getModel();
+        Object[] obj = new Object[12];
+        for (int i = 0; i < listarIngreso.size(); i++) {
+            obj[0] = listarIngreso.get(i).getClaveIngresoMaterial();
+            obj[1] = listarIngreso.get(i).getDetallePedido();
+            obj[2] = listarIngreso.get(i).getEstado();
+            obj[3] = listarIngreso.get(i).getEstadoDescripcion();
+            obj[4] = listarIngreso.get(i).getCantidadPedido();
+            obj[5] = listarIngreso.get(i).getFechaPedido();
+            obj[6] = listarIngreso.get(i).getFechaIngreso();
+            obj[7] = listarIngreso.get(i).getCostoTotal();
+            obj[8] = listarIngreso.get(i).getClaveProveedor();
+            obj[9] = listarIngreso.get(i).getNombreProveedor();
+            obj[10] = listarIngreso.get(i).getClaveMateria();
+            obj[11] = listarIngreso.get(i).getNombreMateria();
+           modelo.addRow(obj);
+        }
+        tableIngresoPedidos.setModel(modelo);
+    
     }
     // Termina el listado de las tablas de todas las clases
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -245,7 +329,6 @@ public class Sistema extends javax.swing.JFrame {
         lblProveedor = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
@@ -257,6 +340,17 @@ public class Sistema extends javax.swing.JFrame {
         jdcFechaIngreso = new com.toedter.calendar.JDateChooser();
         cbEstadoIngreso = new javax.swing.JCheckBox();
         txtCostoTotalIngreso = new javax.swing.JTextField();
+        jPanel9 = new javax.swing.JPanel();
+        btnAgregarIngreso = new javax.swing.JButton();
+        btnModificarIngreso = new javax.swing.JButton();
+        btnCancelarIngreso = new javax.swing.JButton();
+        btnDescargarIngreso = new javax.swing.JButton();
+        btnEliminarIngreso = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tableIngresoPedidos = new javax.swing.JTable();
+        txtClaveProveedorIngreso = new javax.swing.JTextField();
+        txtClaveMateriaIngreso = new javax.swing.JTextField();
+        txtFechaIngreso = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -788,55 +882,182 @@ public class Sistema extends javax.swing.JFrame {
 
         lblIngresoPedido.setFont(new java.awt.Font("Britannic Bold", 0, 24)); // NOI18N
         lblIngresoPedido.setText("Ingreso Pedidos");
-        jPanel8.add(lblIngresoPedido, new org.netbeans.lib.awtextra.AbsoluteConstraints(402, 24, -1, -1));
+        jPanel8.add(lblIngresoPedido, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 10, -1, 30));
 
         lblClaveIngreso.setFont(new java.awt.Font("Britannic Bold", 0, 18)); // NOI18N
         lblClaveIngreso.setText("Clave Ingreso: ");
-        jPanel8.add(lblClaveIngreso, new org.netbeans.lib.awtextra.AbsoluteConstraints(65, 70, -1, -1));
+        jPanel8.add(lblClaveIngreso, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 90, -1, -1));
 
         lblCantidad.setFont(new java.awt.Font("Britannic Bold", 0, 18)); // NOI18N
         lblCantidad.setText("Cantidad:");
-        jPanel8.add(lblCantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(108, 133, -1, -1));
+        jPanel8.add(lblCantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 140, -1, -1));
 
         lblProveedor.setFont(new java.awt.Font("Britannic Bold", 0, 18)); // NOI18N
         lblProveedor.setText("Proveedor: ");
-        jPanel8.add(lblProveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(92, 195, -1, -1));
+        jPanel8.add(lblProveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 180, -1, -1));
 
         jLabel9.setFont(new java.awt.Font("Britannic Bold", 0, 18)); // NOI18N
         jLabel9.setText("Materia Prima: ");
-        jPanel8.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 262, -1, -1));
+        jPanel8.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 220, -1, -1));
 
         jLabel10.setFont(new java.awt.Font("Britannic Bold", 0, 18)); // NOI18N
         jLabel10.setText("Detalle Ingreso: ");
-        jPanel8.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 328, -1, -1));
-
-        jLabel11.setFont(new java.awt.Font("Britannic Bold", 0, 18)); // NOI18N
-        jLabel11.setText("Fecha Pedido: ");
-        jPanel8.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(544, 70, -1, -1));
+        jPanel8.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 260, -1, -1));
 
         jLabel12.setFont(new java.awt.Font("Britannic Bold", 0, 18)); // NOI18N
         jLabel12.setText("Fecha Ingreso: ");
-        jPanel8.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(544, 133, -1, -1));
+        jPanel8.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 90, -1, -1));
 
         jLabel13.setFont(new java.awt.Font("Britannic Bold", 0, 18)); // NOI18N
         jLabel13.setText("Estado: ");
-        jPanel8.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(544, 195, -1, -1));
+        jPanel8.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 150, -1, -1));
 
         jLabel14.setFont(new java.awt.Font("Britannic Bold", 0, 18)); // NOI18N
         jLabel14.setText("Costo Total: ");
-        jPanel8.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(544, 262, -1, -1));
-        jPanel8.add(txtClaveIngreso, new org.netbeans.lib.awtextra.AbsoluteConstraints(203, 66, 226, 30));
-        jPanel8.add(txtCantidadIngreso, new org.netbeans.lib.awtextra.AbsoluteConstraints(203, 130, 226, 28));
+        jPanel8.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 210, -1, -1));
 
-        cbxProveedorIngreso.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jPanel8.add(cbxProveedorIngreso, new org.netbeans.lib.awtextra.AbsoluteConstraints(203, 192, 226, 29));
+        txtClaveIngreso.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtClaveIngresoKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtClaveIngresoKeyTyped(evt);
+            }
+        });
+        jPanel8.add(txtClaveIngreso, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 80, 226, 30));
 
-        cbxMateriaPrimaIngreso.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jPanel8.add(cbxMateriaPrimaIngreso, new org.netbeans.lib.awtextra.AbsoluteConstraints(203, 258, 226, 31));
-        jPanel8.add(txtDetalleIngreso, new org.netbeans.lib.awtextra.AbsoluteConstraints(203, 325, 226, 28));
-        jPanel8.add(jdcFechaIngreso, new org.netbeans.lib.awtextra.AbsoluteConstraints(678, 130, 169, 28));
-        jPanel8.add(cbEstadoIngreso, new org.netbeans.lib.awtextra.AbsoluteConstraints(678, 192, 29, 29));
-        jPanel8.add(txtCostoTotalIngreso, new org.netbeans.lib.awtextra.AbsoluteConstraints(678, 258, 169, 31));
+        txtCantidadIngreso.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtCantidadIngresoKeyTyped(evt);
+            }
+        });
+        jPanel8.add(txtCantidadIngreso, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 130, 226, 28));
+
+        jPanel8.add(cbxProveedorIngreso, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 170, 226, 29));
+
+        jPanel8.add(cbxMateriaPrimaIngreso, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 210, 226, 31));
+
+        txtDetalleIngreso.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtDetalleIngresoKeyReleased(evt);
+            }
+        });
+        jPanel8.add(txtDetalleIngreso, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 250, 226, 28));
+
+        jdcFechaIngreso.setMinSelectableDate(new java.util.Date(-62135744294000L));
+        jPanel8.add(jdcFechaIngreso, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 90, 169, 28));
+        jPanel8.add(cbEstadoIngreso, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 150, 100, 29));
+
+        txtCostoTotalIngreso.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtCostoTotalIngresoKeyTyped(evt);
+            }
+        });
+        jPanel8.add(txtCostoTotalIngreso, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 200, 169, 31));
+
+        btnAgregarIngreso.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/agregar.png"))); // NOI18N
+        btnAgregarIngreso.setText("Nuevo Pedido");
+        btnAgregarIngreso.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        btnAgregarIngreso.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarIngresoActionPerformed(evt);
+            }
+        });
+
+        btnModificarIngreso.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/modificar.png"))); // NOI18N
+        btnModificarIngreso.setText("Modificar");
+        btnModificarIngreso.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModificarIngresoActionPerformed(evt);
+            }
+        });
+
+        btnCancelarIngreso.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/cancelar.png"))); // NOI18N
+        btnCancelarIngreso.setText("Cancelar");
+        btnCancelarIngreso.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarIngresoActionPerformed(evt);
+            }
+        });
+
+        btnDescargarIngreso.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/descarga.png"))); // NOI18N
+        btnDescargarIngreso.setText("Descarga");
+        btnDescargarIngreso.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDescargarIngresoActionPerformed(evt);
+            }
+        });
+
+        btnEliminarIngreso.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/eliminar.png"))); // NOI18N
+        btnEliminarIngreso.setText("Eliminar");
+        btnEliminarIngreso.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarIngresoActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
+        jPanel9.setLayout(jPanel9Layout);
+        jPanel9Layout.setHorizontalGroup(
+            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel9Layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addComponent(btnAgregarIngreso, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(40, 40, 40)
+                .addComponent(btnModificarIngreso, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30)
+                .addComponent(btnCancelarIngreso, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
+                .addComponent(btnEliminarIngreso, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnDescargarIngreso, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(33, 33, 33))
+        );
+        jPanel9Layout.setVerticalGroup(
+            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAgregarIngreso, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnModificarIngreso, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnCancelarIngreso, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnDescargarIngreso, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnEliminarIngreso, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(444, 444, 444))
+        );
+
+        jPanel8.add(jPanel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 460, 920, -1));
+
+        tableIngresoPedidos.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Clave Ingreso", "Detalle Pedido", "cve Estado", "Estado", "Cantidad Pedido", "Fecha de Pedido", "Fecha de Ingreso", "Costo Total", "clave Proveedor", "NombreProveedor", "Clave Materia", "Nombre Materia Prima"
+            }
+        ));
+        tableIngresoPedidos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableIngresoPedidosMouseClicked(evt);
+            }
+        });
+        jScrollPane3.setViewportView(tableIngresoPedidos);
+        if (tableIngresoPedidos.getColumnModel().getColumnCount() > 0) {
+            tableIngresoPedidos.getColumnModel().getColumn(2).setMinWidth(0);
+            tableIngresoPedidos.getColumnModel().getColumn(2).setPreferredWidth(0);
+            tableIngresoPedidos.getColumnModel().getColumn(2).setMaxWidth(0);
+            tableIngresoPedidos.getColumnModel().getColumn(8).setMinWidth(0);
+            tableIngresoPedidos.getColumnModel().getColumn(8).setPreferredWidth(0);
+            tableIngresoPedidos.getColumnModel().getColumn(8).setMaxWidth(0);
+            tableIngresoPedidos.getColumnModel().getColumn(10).setMinWidth(0);
+            tableIngresoPedidos.getColumnModel().getColumn(10).setPreferredWidth(0);
+            tableIngresoPedidos.getColumnModel().getColumn(10).setMaxWidth(0);
+        }
+
+        jPanel8.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 310, 980, 120));
+        jPanel8.add(txtClaveProveedorIngreso, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 170, 80, 30));
+        jPanel8.add(txtClaveMateriaIngreso, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 210, 80, 30));
+        jPanel8.add(txtFechaIngreso, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 90, 130, 20));
 
         jTabbedPane1.addTab("Ingreso Pedidos", jPanel8);
 
@@ -881,8 +1102,14 @@ public class Sistema extends javax.swing.JFrame {
     private void btnPedidosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPedidosActionPerformed
         jTabbedPane1.setSelectedIndex(3);
         limpiarIngresoPedidos();
+        if(tableIngresoPedidos.getRowCount() == 0){
+         listarIngresoPedido();
+        }
+               
+           cargaComboCompletoIngreso();
+           jdcFechaIngreso.setEnabled(false);
     }//GEN-LAST:event_btnPedidosActionPerformed
-//TERMINAN BOTONES DE REDIRECCIONAMIENTO +++++++++++++++++++++++++++++++++++++++++++
+   //TERMINAN BOTONES DE REDIRECCIONAMIENTO +++++++++++++++++++++++++++++++++++++++++++
     
     
  //INICIA EL APARTADO DE PROVEEDOR   
@@ -1166,7 +1393,28 @@ public class Sistema extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAgregarAlmacenActionPerformed
 
     private void btnModificarAlmacenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarAlmacenActionPerformed
-        // TODO add your handling code here:
+       
+        if("".equals(txtClaveMateria.getText())){
+            JOptionPane.showMessageDialog(null, "Seleccione una fila");
+        }else{  
+        if(!"".equals(txtClaveMateria.getText())||!"".equals(txtNombreMateria.getText())){
+       almacen.setClaveMateriaPrima(txtClaveMateria.getText());
+       almacen.setNombreMateria(txtNombreMateria.getText());
+       almacen.setStockMinimo(Integer.parseInt(txtStockMinimo.getText()));
+       almacen.setCantidadDisp(Integer.parseInt(txtCantidadDisponible.getText()));
+       
+        almacenDao.ModificarAlmacen(almacen);
+        JOptionPane.showMessageDialog(null,"Modificado con exito");
+       
+        limpiarTable();
+        limpiarAlmacen();
+        listarAlmacen();        
+        }else{
+        JOptionPane.showMessageDialog(null,"Los campos estan vacios");
+        }
+      }
+        
+        
     }//GEN-LAST:event_btnModificarAlmacenActionPerformed
 
     private void btnCancelarAlmacenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarAlmacenActionPerformed
@@ -1174,7 +1422,19 @@ public class Sistema extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCancelarAlmacenActionPerformed
 
     private void btnEliminarAlmacenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarAlmacenActionPerformed
-        // TODO add your handling code here:
+       
+         if (!"".equals(txtClaveMateria.getText())) {
+            int pregunta = JOptionPane.showConfirmDialog(null, "¿Estas seguro de eliminar?");
+            if (pregunta == 0) {
+                String id = txtClaveMateria.getText();
+               almacenDao.eliminarAlmacen(id);
+               JOptionPane.showMessageDialog(null,"Eliminado Correctamente !!");
+                limpiarAlmacen();
+                limpiarTable();
+                listarAlmacen();  
+            }
+        }
+       
     }//GEN-LAST:event_btnEliminarAlmacenActionPerformed
 
     private void btnDescargarAlmacenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescargarAlmacenActionPerformed
@@ -1182,7 +1442,7 @@ public class Sistema extends javax.swing.JFrame {
     }//GEN-LAST:event_btnDescargarAlmacenActionPerformed
 
     private void tableAlmacenMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableAlmacenMouseClicked
-         txtClaveMateria.setEnabled(false);
+      txtClaveMateria.setEnabled(false);
       //para que cuando se seleccione una fila se muestren
      //en los txt de la parte superior
         int fila = tableAlmacen.rowAtPoint(evt.getPoint());
@@ -1195,6 +1455,207 @@ public class Sistema extends javax.swing.JFrame {
         almacenMouseClicked();
         
     }//GEN-LAST:event_tableAlmacenMouseClicked
+   //TERMINA EL APARTADO DE ALMACEN ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    
+    
+  /*APARTDO DE INGRESO PEDIDOS 
+  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/ 
+    private void btnAgregarIngresoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarIngresoActionPerformed
+      
+      if (!"".equals(txtClaveIngreso.getText()) || !"".equals(txtCantidadIngreso.getText())) {
+           ingresoPedidos.setClaveIngresoMaterial(txtClaveIngreso.getText());
+           ingresoPedidos.setDetallePedido(txtDetalleIngreso.getText());
+           ingresoPedidos.setEstado(cbEstadoIngreso.isSelected() ? 1 : 0); // 1 para activo, 0 para inactivo
+           ingresoPedidos.setCantidadPedido(Integer.parseInt(txtCantidadIngreso.getText()));
+           
+          
+          
+           ingresoPedidos.setFechaIngreso(txtFechaIngreso.getText());
+           ingresoPedidos.setCostoTotal(Float.parseFloat(txtCostoTotalIngreso.getText()));
+           ingresoPedidos.setClaveProveedor(txtClaveProveedorIngreso.getText());
+           ingresoPedidos.setClaveMateria(txtClaveMateriaIngreso.getText());
+           
+            ingresoPedidosDao.registrarIngresoPedido(ingresoPedidos); //se manda a traer del DAO Ingreso Pedidos la funcion registrar
+            
+            
+            actualizarCantidadIngreso();
+            limpiarTablaIngreso();  
+            limpiarIngresoPedidos();
+            if (tableIngresoPedidos.getRowCount()==0){
+            listarIngresoPedido();
+            }else{
+            limpiarTable();
+            }
+            JOptionPane.showMessageDialog(null, "Nuevo Ingreso Registrado con exito!!");
+            cargaComboCompletoIngreso();
+            
+           
+        } else {
+            JOptionPane.showMessageDialog(null, "Los campos estan vacios");
+
+        }  
+        
+        
+    }//GEN-LAST:event_btnAgregarIngresoActionPerformed
+
+    private void btnModificarIngresoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarIngresoActionPerformed
+        if("".equals(txtClaveIngreso.getText())){
+            JOptionPane.showMessageDialog(null, "Seleccione una fila");
+        }else{  
+       if(!"".equals(txtClaveIngreso.getText())||!"".equals(txtCantidadIngreso.getText())){
+       ingresoPedidos.setClaveIngresoMaterial(txtClaveIngreso.getText());
+       ingresoPedidos.setDetallePedido(txtDetalleIngreso.getText());
+       ingresoPedidos.setEstado(cbEstadoIngreso.isSelected() ? 1 : 0);
+       ingresoPedidos.setCantidadPedido(Integer.parseInt(txtCantidadIngreso.getText()));
+       
+       // Para guardar la fecha de ingreso material
+        int mes = jdcFechaIngreso.getCalendar().get(Calendar.MONTH) + 1;
+        int dia = jdcFechaIngreso.getCalendar().get(Calendar.DAY_OF_MONTH);
+        int anio = jdcFechaIngreso.getCalendar().get(Calendar.YEAR);
+        String fecha = (anio + "-" + mes + "-" + dia);
+        txtFechaIngreso.setText(fecha);        
+       ingresoPedidos.setFechaIngreso(txtFechaIngreso.getText());
+       
+       ingresoPedidos.setCostoTotal(Float.parseFloat(txtCostoTotalIngreso.getText()));
+       ingresoPedidos.setClaveProveedor(txtClaveProveedorIngreso.getText());
+       ingresoPedidos.setClaveMateria(txtClaveMateriaIngreso.getText());
+        
+       ingresoPedidosDao.moficarIngresoPedido(ingresoPedidos);
+        JOptionPane.showMessageDialog(null,"Modificado con exito");
+       
+            limpiarTablaIngreso();  
+            limpiarIngresoPedidos();
+            cargaComboCompletoIngreso();
+            if (tableIngresoPedidos.getRowCount()==0){
+            listarIngresoPedido();
+            }else{
+            limpiarTable();
+            }
+        }else{
+        JOptionPane.showMessageDialog(null,"Los campos estan vacios");
+        }
+      }
+        
+        
+        
+    }//GEN-LAST:event_btnModificarIngresoActionPerformed
+
+    private void btnCancelarIngresoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarIngresoActionPerformed
+       limpiarIngresoPedidos();
+       cargaComboCompletoIngreso();
+    }//GEN-LAST:event_btnCancelarIngresoActionPerformed
+
+    private void btnDescargarIngresoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescargarIngresoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnDescargarIngresoActionPerformed
+
+    private void btnEliminarIngresoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarIngresoActionPerformed
+       
+         if (!"".equals(txtClaveIngreso.getText())) {
+            int pregunta = JOptionPane.showConfirmDialog(null, "¿Estas seguro de eliminar?");
+            if (pregunta == 0) {
+                String id = txtClaveIngreso.getText();
+              ingresoPedidosDao.eliminarIngresoPedido(id);
+               JOptionPane.showMessageDialog(null,"Eliminado Correctamente !!");
+           
+            limpiarTablaIngreso();  
+            limpiarIngresoPedidos();
+            cargaComboCompletoIngreso();
+            if (tableIngresoPedidos.getRowCount()==0){
+            listarIngresoPedido();
+            }else{
+            limpiarTable();
+            }
+            }
+        }
+    }//GEN-LAST:event_btnEliminarIngresoActionPerformed
+
+    
+    
+    private void txtClaveIngresoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtClaveIngresoKeyTyped
+      //para que solo se pueda ingresar 6 valores dentro de la clave de la materia prima
+        if (txtClaveIngreso.getText().length() >= 6) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtClaveIngresoKeyTyped
+
+    private void txtCantidadIngresoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCantidadIngresoKeyTyped
+         if (txtCantidadIngreso.getText().length() >= 3) {
+            evt.consume();
+        }
+        event.numberKeyPress(evt);
+    }//GEN-LAST:event_txtCantidadIngresoKeyTyped
+
+    private void txtDetalleIngresoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDetalleIngresoKeyReleased
+        String texto_mayuscula = txtDetalleIngreso.getText().toUpperCase();
+        txtDetalleIngreso.setText(texto_mayuscula);
+        
+    }//GEN-LAST:event_txtDetalleIngresoKeyReleased
+
+    private void txtCostoTotalIngresoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCostoTotalIngresoKeyTyped
+        if (txtCostoTotalIngreso.getText().length() >= 5) {
+            evt.consume();
+        }
+        event.numberKeyPress(evt);
+    }//GEN-LAST:event_txtCostoTotalIngresoKeyTyped
+
+    private void txtClaveIngresoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtClaveIngresoKeyReleased
+        String texto_mayuscula = txtClaveIngreso.getText().toUpperCase();
+        txtClaveIngreso.setText(texto_mayuscula);
+    }//GEN-LAST:event_txtClaveIngresoKeyReleased
+
+    private void tableIngresoPedidosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableIngresoPedidosMouseClicked
+       
+        txtClaveIngreso.setEnabled(false);
+        jdcFechaIngreso.setEnabled(true);
+      //para que cuando se seleccione una fila se muestren
+     //en los txt de la parte superior
+        int fila = tableIngresoPedidos.rowAtPoint(evt.getPoint());
+        
+        txtClaveIngreso.setText(tableIngresoPedidos.getValueAt(fila,0).toString());
+        txtDetalleIngreso.setText(tableIngresoPedidos.getValueAt(fila,1).toString());
+       
+        // Obtén el valor del estado
+        int estado = Integer.parseInt(tableIngresoPedidos.getValueAt(fila, 2).toString());
+        // Establece el estado del checkbox
+        cbEstadoIngreso.setSelected(estado == 1);       
+        txtCantidadIngreso.setText(tableIngresoPedidos.getValueAt(fila, 4).toString());
+        
+        
+        // Obtén el valor de la celda de la tabla que contiene la fecha de ingreso
+        Object fechaValor = tableIngresoPedidos.getValueAt(fila, 6);
+        // Verifica si el campo está vacío o es null
+        if (fechaValor == null || fechaValor.toString().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Hace falta fecha de Ingreso");
+            txtFechaIngreso.setText("");
+            jdcFechaIngreso.setDate(null);
+        } else {
+        // El campo no está vacío, continúa con el procesamiento de la fecha
+            txtFechaIngreso.setText(fechaValor.toString());
+        // Obtén la fecha como texto
+         String fechaTexto = fechaValor.toString();
+            // Convierte el texto de fecha en un objeto Date
+            try {
+                Date fecha = new SimpleDateFormat("yyyy-MM-dd").parse(fechaTexto);
+                // Establece la fecha en el JDateChooser
+                jdcFechaIngreso.setDate(fecha);
+            } catch (ParseException ex) {
+                // Maneja la excepción si ocurre un error al convertir la fecha
+                ex.printStackTrace();
+            }
+        }
+
+        
+        
+        txtCostoTotalIngreso.setText(tableIngresoPedidos.getValueAt(fila, 7).toString());
+        cbxProveedorIngreso.setSelectedItem(tableIngresoPedidos.getValueAt(fila, 9).toString());
+        cbxMateriaPrimaIngreso.setSelectedItem(tableIngresoPedidos.getValueAt(fila, 11).toString());
+
+        ingresoPedidosMouseClicked();
+        
+        
+        
+    }//GEN-LAST:event_tableIngresoPedidosMouseClicked
 
     
     
@@ -1235,16 +1696,21 @@ public class Sistema extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarAlmacen;
     private javax.swing.JButton btnAgregarCiudad;
+    private javax.swing.JButton btnAgregarIngreso;
     private javax.swing.JButton btnAgregarProveedor;
     private javax.swing.JButton btnAlmacen;
     private javax.swing.JButton btnCancelarAlmacen;
+    private javax.swing.JButton btnCancelarIngreso;
     private javax.swing.JButton btnCancelarProveedor;
     private javax.swing.JButton btnDescargarAlmacen;
+    private javax.swing.JButton btnDescargarIngreso;
     private javax.swing.JButton btnDescargarProveedor;
     private javax.swing.JButton btnEliminarAlmacen;
+    private javax.swing.JButton btnEliminarIngreso;
     private javax.swing.JButton btnEliminarProveedor;
     private javax.swing.JButton btnGenerarSalida;
     private javax.swing.JButton btnModificarAlmacen;
+    private javax.swing.JButton btnModificarIngreso;
     private javax.swing.JButton btnModificarProveedor;
     private javax.swing.JButton btnPedidos;
     private javax.swing.JButton btnProveedor;
@@ -1256,7 +1722,6 @@ public class Sistema extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> cbxProveedorIngreso;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
@@ -1272,8 +1737,10 @@ public class Sistema extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
     private com.toedter.calendar.JDateChooser jdcFechaIngreso;
     private javax.swing.JLabel labelFecha;
@@ -1299,6 +1766,7 @@ public class Sistema extends javax.swing.JFrame {
     private javax.swing.JLabel lblStockMinimo;
     private javax.swing.JLabel lblTelefonoProveedor;
     private javax.swing.JTable tableAlmacen;
+    private javax.swing.JTable tableIngresoPedidos;
     private javax.swing.JTable tableProveedor;
     private javax.swing.JTextField txtApellidoMaterno;
     private javax.swing.JTextField txtApellidoPaterno;
@@ -1307,13 +1775,16 @@ public class Sistema extends javax.swing.JFrame {
     private javax.swing.JTextField txtCantidadSalida;
     private javax.swing.JTextField txtClaveIngreso;
     private javax.swing.JTextField txtClaveMateria;
+    private javax.swing.JTextField txtClaveMateriaIngreso;
     private javax.swing.JTextField txtClaveProveedor;
+    private javax.swing.JTextField txtClaveProveedorIngreso;
     private javax.swing.JTextField txtClaveSalida;
     private javax.swing.JTextField txtCodigoPostalProveedor;
     private javax.swing.JTextField txtCorreoProveedor;
     private javax.swing.JTextField txtCostoTotalIngreso;
     private javax.swing.JTextField txtDetalleIngreso;
     private javax.swing.JTextField txtDetalleSalida;
+    private javax.swing.JTextField txtFechaIngreso;
     private javax.swing.JTextField txtNombreEncargado;
     private javax.swing.JTextField txtNombreMateria;
     private javax.swing.JTextField txtNombreProveedor;
@@ -1330,15 +1801,7 @@ public class Sistema extends javax.swing.JFrame {
         txtCantidadSalida.setText("");
         txtDetalleSalida.setText("");
     }
-    private void limpiarIngresoPedidos() {
-        txtClaveIngreso.setText("");
-        txtCantidadIngreso.setText("");
-        cbxProveedorIngreso.removeAllItems();
-        cbxMateriaPrimaIngreso.removeAllItems();
-        txtDetalleIngreso.setText("");
-        jdcFechaIngreso.setDate(null);
-        txtCostoTotalIngreso.setText("");
-    }
+    
     
     
     // Inicia Metodos para el apartado de proveedor *************
@@ -1405,5 +1868,56 @@ public class Sistema extends javax.swing.JFrame {
     }
     //Termina metodos para el apartado de proveedor****************
    
-
+    //Inicia metodos para el apartado de Ingreso Pedidos+++++++++++++++++++
+    private void limpiarIngresoPedidos() {
+        txtClaveIngreso.setText("");
+        txtCantidadIngreso.setText("");
+        cbxProveedorIngreso.removeAllItems();
+        cbxMateriaPrimaIngreso.removeAllItems();
+        txtDetalleIngreso.setText("");
+        jdcFechaIngreso.setDate(null);
+        txtFechaIngreso.setText("");
+        txtCostoTotalIngreso.setText("");
+        cbEstadoIngreso.setSelected(false);
+        
+        agregarIngresoPedidos();
+    }
+    private void agregarIngresoPedidos(){
+        txtClaveIngreso.setEnabled(true);
+        jdcFechaIngreso.setEnabled(false);
+        
+        btnAgregarIngreso.setEnabled(true);
+        btnModificarIngreso.setEnabled(false);
+        btnCancelarIngreso.setEnabled(true);
+        btnEliminarIngreso.setEnabled(false);
+        btnDescargarIngreso.setEnabled(true);
+    
+    }
+    private void ingresoPedidosMouseClicked(){
+   
+        btnAgregarIngreso.setEnabled(false);
+        btnModificarIngreso.setEnabled(true);
+        btnCancelarIngreso.setEnabled(true);
+        btnEliminarIngreso.setEnabled(true);
+        btnDescargarIngreso.setEnabled(false);
+    
+    }
+    private void limpiarTablaIngreso() {
+    DefaultTableModel model = (DefaultTableModel) tableIngresoPedidos.getModel();
+    model.setRowCount(0); // Esta línea vacía la tabla
+    }
+    //Termina metodos para el apartado de ingreso pedidos+++++++++++++++++++
+    
+    //Metodo para actualizar cantidad Disponible en el almacén
+    //Con los datos de cantidad Ingreso 
+    private void actualizarCantidadIngreso(){
+     int cant = Integer.parseInt(txtCantidadIngreso.getText());
+     String cod = txtClaveMateriaIngreso.getText();
+        almacen = almacenDao.BuscarMateria(cod);
+        int stockActual = almacen.getCantidadDisp()+cant;
+        ingresoPedidosDao.actualizasStock(stockActual, cod);
+    }
+    
+    
+    
 }

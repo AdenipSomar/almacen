@@ -127,6 +127,27 @@ public class ProveedorDAO {
 
     }
     
+         // Método para obtener la lista de proveedores desde la base de datos
+    public List<Proveedor> obtenerProveedor() {
+        List<Proveedor> proveedores = new ArrayList<>();
+        String query = "SELECT nombreEmpresa, cveProveedor FROM proveedor_tbl";
+        try (Connection con = conexion.getConnection();
+             PreparedStatement pst = con.prepareStatement(query);
+             ResultSet rs = pst.executeQuery()) {
+
+            while (rs.next()) {
+                String nombreEmpresa = rs.getString("nombreEmpresa");
+                String cveProveedor = rs.getString("cveProveedor");
+                // Crear objeto Ciudad y agregarlo a la lista
+               // Proveedor proveedor = new Proveedor(claveProveedor, nombreProveedor);
+                Proveedor proveedor = new Proveedor(cveProveedor, nombreEmpresa,"","","","","","","","");
+                proveedores.add(proveedor);
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al obtener ciudades desde la base de datos: " + e.getMessage());
+        }
+        return proveedores;
+    }
     
     
 }

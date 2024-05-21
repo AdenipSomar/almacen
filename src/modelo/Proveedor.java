@@ -34,6 +34,8 @@ public class Proveedor {
         this.nombreCiudadProveedor = nombreCiudadProveedor;//Nombre de la ciudad
     }
 
+   
+
     public String getCveProveedor() {
         return cveProveedor;
     }
