@@ -22,11 +22,14 @@ public class CiudadView extends javax.swing.JFrame {
   Ciudad ciudad = new Ciudad(); //importar los datos de ciudad
   CiudadDAO ciudadDao = new CiudadDAO();//importando los metodos de ciudadDAO
 
+ private Sistema sistema;
+ 
      DefaultTableModel modelo = new DefaultTableModel(); //se crea el modelo para las tablas para listar
      DefaultTableModel tmp = new DefaultTableModel();
      
-    public CiudadView() {
+  public CiudadView(Sistema sistema) {
         initComponents();
+        this.sistema = sistema ;
         this.setTitle("Ciudad Proveedor");
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -34,6 +37,12 @@ public class CiudadView extends javax.swing.JFrame {
         
         listarCiudad(); //mostrando la tabla ciudad listada desde el inicio
         limpiarCiudad(); //Mostrando metodo para limpiar la ciudad
+        
+  
+  }
+
+    private CiudadView() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
   public void limpiarTable(){ 
 // para que no se repitan los datos del cliente al mostrarse en las tablas
@@ -42,7 +51,7 @@ public class CiudadView extends javax.swing.JFrame {
         i= i-1;
     }
     }
-   public void listarCiudad(){
+  public void listarCiudad(){
        //para que se puedan listar las ciudades en la tabla ciudad
    List<Ciudad> listarCiudad = ciudadDao.listarCiudad();
    modelo = (DefaultTableModel) tableCiudad.getModel();
@@ -239,6 +248,8 @@ public class CiudadView extends javax.swing.JFrame {
         limpiarCiudad();
         limpiarTable();
         listarCiudad();    
+        sistema.cargaComboCompleto();
+        
         
         }else{
         JOptionPane.showMessageDialog(null, "Los campos estan vacios");
@@ -258,6 +269,7 @@ public class CiudadView extends javax.swing.JFrame {
         limpiarTable();
         limpiarCiudad();
         listarCiudad();
+        sistema.cargaComboCompleto();
         }else{
         JOptionPane.showMessageDialog(null,"Los campos estan vacios");
         }
@@ -318,7 +330,8 @@ public class CiudadView extends javax.swing.JFrame {
                 ciudadDao.eliminarCliente(id);
                 limpiarCiudad();
                 limpiarTable();
-                listarCiudad();             
+                listarCiudad();  
+                sistema.cargaComboCompleto();
             }
         }  
     }//GEN-LAST:event_btnEliminarCiudadActionPerformed

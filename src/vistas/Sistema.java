@@ -31,7 +31,7 @@ import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
  */
 public class Sistema extends javax.swing.JFrame {
 
-    CiudadView ciudad = new CiudadView();
+    CiudadView ciudad = new CiudadView(this);
     CiudadDAO ciudadDao = new CiudadDAO();
 
     Proveedor proveedor = new Proveedor();
@@ -76,7 +76,8 @@ public class Sistema extends javax.swing.JFrame {
 
     //Parte de carga del combo de  ciudad en la parte de Proveedor
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    private void cargaComboCompleto() {
+    public void cargaComboCompleto() {
+        cbxCiudadProveedor.removeAllItems();
         // Cargar datos de las ciudades en el combo box
         cargarCiudades();
         mostrarCodigoPostal();
@@ -84,14 +85,14 @@ public class Sistema extends javax.swing.JFrame {
         cbxCiudadProveedor.addActionListener(e -> mostrarCodigoPostal());
     }
     // Método para cargar los nombres de las ciudades en el combo box
-    private void cargarCiudades() {
+    public void cargarCiudades() {
         List<Ciudad> ciudades = ciudadDao.obtenerCiudades();
         for (Ciudad ciudad : ciudades) {
             cbxCiudadProveedor.addItem(ciudad.getNombreCiudad());
         }
     }
     // Método para mostrar el código postal correspondiente cuando se selecciona una ciudad
-    private void mostrarCodigoPostal() {
+    public void mostrarCodigoPostal() {
         String nombreCiudadSeleccionada = (String) cbxCiudadProveedor.getSelectedItem();
         List<Ciudad> ciudades = ciudadDao.obtenerCiudades();
         for (Ciudad ciudad : ciudades) {
@@ -1094,7 +1095,7 @@ public class Sistema extends javax.swing.JFrame {
     }//GEN-LAST:event_btnProveedorActionPerformed
 
     private void btnAgregarCiudadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarCiudadActionPerformed
-        CiudadView ciudad = new CiudadView();
+        //CiudadView ciudad = new CiudadView(this);
         ciudad.setVisible(true);
 
     }//GEN-LAST:event_btnAgregarCiudadActionPerformed
