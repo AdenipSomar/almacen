@@ -26,7 +26,7 @@ public class ProveedorDAO {
            ps= con.prepareStatement(sql);
            ps.setString(1,prov.getCveProveedor());
            ps.setString(2, prov.getNombreEmpresa());
-           ps.setString(3, prov.getNombreEmpresa());
+           ps.setString(3, prov.getNombreEncargado());
            ps.setString(4, prov.getApePatEncargado());
            ps.setString(5, prov.getApeMatEncargado());
            ps.setString(6, prov.getTelefonoProveedor());
@@ -51,7 +51,7 @@ public class ProveedorDAO {
     
     public List listarProveedor(){        
       List<Proveedor> ListaProv = new ArrayList();       
-        String sql = "call almacen_db.TABLA_PROVEEDOR_CIUDAD();";       
+        String sql = "call almacen_db.TABLA_PROVEEDOR_CIUDAD()";       
         try{
         con =cn.getConnection();
         ps = con.prepareStatement(sql);
@@ -116,12 +116,15 @@ public class ProveedorDAO {
 
         } catch (SQLException e) {
             System.out.println(e.toString());
+            JOptionPane.showMessageDialog(null, "No es posible eliminar este registro \n "
+                    + "Está siendo utilizado", "Error de borrado", JOptionPane.WARNING_MESSAGE);
             return false;
         } finally {
             try {
                 con.close();
             } catch (SQLException ex) {
                 System.out.println(ex.toString());
+                
             }
         }
 

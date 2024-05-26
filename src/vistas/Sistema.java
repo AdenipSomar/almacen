@@ -22,6 +22,8 @@ import modelo.IngresoPedidos;
 import modelo.IngresoPedidosDAO;
 import modelo.Proveedor;
 import modelo.ProveedorDAO;
+import modelo.Salida;
+import modelo.SalidaDAO;
 import modelo.conexion;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
@@ -42,6 +44,9 @@ public class Sistema extends javax.swing.JFrame {
     
     IngresoPedidos ingresoPedidos = new IngresoPedidos();
     IngresoPedidosDAO ingresoPedidosDao = new IngresoPedidosDAO();
+    
+    Salida salida = new Salida();
+    SalidaDAO  salidaDao = new SalidaDAO();
 
     //eventos de teclado
     Eventos event = new Eventos();
@@ -68,6 +73,8 @@ public class Sistema extends javax.swing.JFrame {
         cargaComboCompleto(); // Cargar datos de las ciudades en el combo box
         
         cargaComboCompletoIngreso(); //Carga datos de los proveedores en el combo box 
+        
+        listarSalida(); //listar las salidas  iniciando en sistema
         
         txtCodigoPostalProveedor.setVisible(true);
         
@@ -115,7 +122,9 @@ public class Sistema extends javax.swing.JFrame {
     
     cargaMateria();
     mostrarClaveMateria();
+    mostrarClaveMateriaSalida();
     cbxMateriaPrimaIngreso.addActionListener(e -> mostrarClaveMateria());
+    cbxClaveMaterialSalida.addActionListener(e -> mostrarClaveMateriaSalida());
     }
     private void cargarProveedor(){
       List<Proveedor> proveedores = proveedorDao.obtenerProveedor();
@@ -137,18 +146,31 @@ public class Sistema extends javax.swing.JFrame {
      List<Almacen> materias = almacenDao.obtenerMateria();
         for (Almacen almacen : materias) {
             cbxMateriaPrimaIngreso.addItem(almacen.getNombreMateria());
+            cbxClaveMaterialSalida.addItem(almacen.getNombreMateria());
         }
     }
     private void mostrarClaveMateria(){
      String nombreMateriaSeleccionada = (String) cbxMateriaPrimaIngreso.getSelectedItem();
-        List<Almacen> materias = almacenDao.obtenerMateria();
+     List<Almacen> materias = almacenDao.obtenerMateria();
         for (Almacen almacen : materias) {
-            if (almacen.getNombreMateria().equals(nombreMateriaSeleccionada)) {
+            if (almacen.getNombreMateria().equals(nombreMateriaSeleccionada) ) {
                 txtClaveMateriaIngreso.setText(almacen.getClaveMateriaPrima());
+                
                 break;
             }
         }  
     }  
+    private void mostrarClaveMateriaSalida(){
+     String nombreMateriaSeleccionada = (String) cbxClaveMaterialSalida.getSelectedItem();
+     List<Almacen> materias = almacenDao.obtenerMateria();
+        for (Almacen almacen : materias) {
+            if (almacen.getNombreMateria().equals(nombreMateriaSeleccionada) ) {
+                txtClaveSalidaMaterial.setText(almacen.getClaveMateriaPrima());
+                
+                break;
+            }
+        }  
+    } 
     //Termina la parte del combo proveedor parte de IngresoPedidos
     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
@@ -196,13 +218,13 @@ public class Sistema extends javax.swing.JFrame {
         Object[] obj = new Object[10];
         for (int i = 0; i < listarProveedor.size(); i++) {
             obj[0] = listarProveedor.get(i).getCveProveedor();
-            obj[1] = listarProveedor.get(i).getNombreEmpresa();
-            obj[2] = listarProveedor.get(i).getNombreEncargado();
-            obj[3] = listarProveedor.get(i).getApePatEncargado();
-            obj[4] = listarProveedor.get(i).getApeMatEncargado();
-            obj[5] = listarProveedor.get(i).getTelefonoProveedor();
+            obj[1] = listarProveedor.get(i).getRfc();
+            obj[2] = listarProveedor.get(i).getNombreEmpresa();
+            obj[3] = listarProveedor.get(i).getNombreEncargado();
+            obj[4] = listarProveedor.get(i).getApePatEncargado();
+            obj[5] = listarProveedor.get(i).getApeMatEncargado();
             obj[6] = listarProveedor.get(i).getCorreoProveedor();
-            obj[7] = listarProveedor.get(i).getRfc();
+            obj[7] = listarProveedor.get(i).getTelefonoProveedor();
             obj[8] = listarProveedor.get(i).getCiudadProveedor();//Es el coidgo Postal
             obj[9] = listarProveedor.get(i).getNombreCiudadProveedor();//Es el nombre de la ciudad
             modelo.addRow(obj);
@@ -247,6 +269,25 @@ public class Sistema extends javax.swing.JFrame {
         tableIngresoPedidos.setModel(modelo);
     
     }
+    public void listarSalida(){
+     //para que se puedan listar las salidas que hay
+        List<Salida> listarSalida = salidaDao.listarSalida();
+        modelo = (DefaultTableModel) tableSalida.getModel();
+        Object[] obj = new Object[6];
+        for (int i = 0; i < listarSalida.size(); i++) {
+            obj[0] = listarSalida.get(i).getClaveSalidaMaterial();
+            obj[1] = listarSalida.get(i).getNombreMateriaPrimaSalida();
+            obj[2] = listarSalida.get(i).getCantidadSalida();
+            obj[3] = listarSalida.get(i).getStockMinimo();
+            obj[4]= listarSalida.get(i).getCantidadDisp();
+            obj[5] = listarSalida.get(i).getDetalleSalida();
+            modelo.addRow(obj);
+        }
+        tableSalida.setModel(modelo);
+    
+    }
+    
+    
     // Termina el listado de las tablas de todas las clases
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
@@ -275,6 +316,10 @@ public class Sistema extends javax.swing.JFrame {
         cbxClaveMaterialSalida = new javax.swing.JComboBox<>();
         txtDetalleSalida = new javax.swing.JTextField();
         btnGenerarSalida = new javax.swing.JButton();
+        txtClaveSalidaMaterial = new javax.swing.JTextField();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        tableSalida = new javax.swing.JTable();
+        btnCancelarSalida = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
@@ -469,16 +514,65 @@ public class Sistema extends javax.swing.JFrame {
         lblDetalleSalida.setFont(new java.awt.Font("Britannic Bold", 0, 24)); // NOI18N
         lblDetalleSalida.setText("Detalle: ");
         jPanel3.add(lblDetalleSalida, new org.netbeans.lib.awtextra.AbsoluteConstraints(88, 349, -1, -1));
+
+        txtClaveSalida.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtClaveSalidaKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtClaveSalidaKeyTyped(evt);
+            }
+        });
         jPanel3.add(txtClaveSalida, new org.netbeans.lib.awtextra.AbsoluteConstraints(271, 104, 222, 33));
+
+        txtCantidadSalida.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtCantidadSalidaKeyTyped(evt);
+            }
+        });
         jPanel3.add(txtCantidadSalida, new org.netbeans.lib.awtextra.AbsoluteConstraints(271, 263, 222, 35));
 
-        cbxClaveMaterialSalida.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jPanel3.add(cbxClaveMaterialSalida, new org.netbeans.lib.awtextra.AbsoluteConstraints(272, 195, 221, 33));
+
+        txtDetalleSalida.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtDetalleSalidaKeyReleased(evt);
+            }
+        });
         jPanel3.add(txtDetalleSalida, new org.netbeans.lib.awtextra.AbsoluteConstraints(271, 347, 222, 36));
 
         btnGenerarSalida.setFont(new java.awt.Font("Britannic Bold", 0, 18)); // NOI18N
+        btnGenerarSalida.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/agregar.png"))); // NOI18N
         btnGenerarSalida.setText("Generar Salida");
-        jPanel3.add(btnGenerarSalida, new org.netbeans.lib.awtextra.AbsoluteConstraints(354, 427, 206, 43));
+        btnGenerarSalida.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGenerarSalidaActionPerformed(evt);
+            }
+        });
+        jPanel3.add(btnGenerarSalida, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 420, 240, 43));
+        jPanel3.add(txtClaveSalidaMaterial, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 150, 100, 30));
+
+        tableSalida.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "CLAVE SALIDA", "MATERIA PRIMA", "SALIDA", "STOCK MINIMO", "DISPONIBLE", "DETALLE SALIDA"
+            }
+        ));
+        jScrollPane4.setViewportView(tableSalida);
+
+        jPanel3.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 100, 520, 400));
+
+        btnCancelarSalida.setFont(new java.awt.Font("Britannic Bold", 0, 18)); // NOI18N
+        btnCancelarSalida.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/cancelar.png"))); // NOI18N
+        btnCancelarSalida.setText("Cancelar");
+        btnCancelarSalida.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarSalidaActionPerformed(evt);
+            }
+        });
+        jPanel3.add(btnCancelarSalida, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 490, 160, 40));
 
         jTabbedPane1.addTab("Salida Material", jPanel3);
 
@@ -1071,6 +1165,11 @@ public class Sistema extends javax.swing.JFrame {
     private void btnSalidaMaterialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalidaMaterialActionPerformed
         jTabbedPane1.setSelectedIndex(0);
         limpiarSalidaMaterial();
+        cargaComboCompletoIngreso();
+        if(tableSalida.getRowCount() == 0){
+        listarSalida();
+        }
+       
     }//GEN-LAST:event_btnSalidaMaterialActionPerformed
 
     private void btnAlmacenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlmacenActionPerformed
@@ -1117,8 +1216,8 @@ public class Sistema extends javax.swing.JFrame {
  //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     //Botones de acción
     private void btnAgregarProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarProveedorActionPerformed
-
-        if (!"".equals(txtClaveProveedor.getText()) || !"".equals(txtNombreProveedor.getText())) {
+          
+        if (!"".equals(txtClaveProveedor.getText()) && !"".equals(txtApellidoPaterno.getText())&&!"".equals(txtNombreEncargado.getText())&&!"".equals(txtTelefonoProveedor.getText())&&!"".equals(txtRFCProveedor.getText())&& !"".equals(txtNombreProveedor.getText())) {
             proveedor.setCveProveedor(txtClaveProveedor.getText());
             proveedor.setNombreEmpresa(txtNombreProveedor.getText());
             proveedor.setNombreEncargado(txtNombreEncargado.getText());
@@ -1137,19 +1236,25 @@ public class Sistema extends javax.swing.JFrame {
             cargaComboCompleto();
 
         } else {
-            JOptionPane.showMessageDialog(null, "Los campos estan vacios");
+            JOptionPane.showMessageDialog(null, "Hay campos vacios");
 
         }
 
     }//GEN-LAST:event_btnAgregarProveedorActionPerformed
 
     private void btnModificarProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarProveedorActionPerformed
-        
-        
+             
         if("".equals(txtClaveProveedor.getText())){
             JOptionPane.showMessageDialog(null, "Seleccione una fila");
         }else{  
-        if(!"".equals(txtClaveProveedor.getText())||!"".equals(txtNombreProveedor.getText())){
+        if(!"".equals(txtClaveProveedor.getText()) && 
+        !"".equals(txtNombreProveedor.getText()) && 
+        !"".equals(txtNombreEncargado.getText()) && 
+        !"".equals(txtApellidoPaterno.getText()) && 
+        !"".equals(txtTelefonoProveedor.getText()) && 
+        !"".equals(txtRFCProveedor.getText()) && 
+        !"".equals(txtCodigoPostalProveedor.getText())){
+            
         proveedor.setCveProveedor(txtClaveProveedor.getText());
         proveedor.setNombreEmpresa(txtNombreProveedor.getText());
         proveedor.setNombreEncargado(txtNombreEncargado.getText());
@@ -1162,14 +1267,15 @@ public class Sistema extends javax.swing.JFrame {
         
         proveedorDao.ModificarProveedor(proveedor);
         JOptionPane.showMessageDialog(null,"Modificado con exito");
-       
+        
+        limpiarTablaProveedor();
         limpiarTable();
         limpiarProveedor();
         listarProveedor();
         cargaComboCompleto();
         
         }else{
-        JOptionPane.showMessageDialog(null,"Los campos estan vacios");
+        JOptionPane.showMessageDialog(null,"Hay campos vacios");
         }
       } 
         
@@ -1183,17 +1289,27 @@ public class Sistema extends javax.swing.JFrame {
 
     private void btnEliminarProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarProveedorActionPerformed
          
-        if (!"".equals(txtClaveProveedor.getText())) {
-            int pregunta = JOptionPane.showConfirmDialog(null, "¿Estas seguro de eliminar?");
-            if (pregunta == 0) {
-                String id = txtClaveProveedor.getText();
-               proveedorDao.eliminarProveedor(id);
+         if (!"".equals(txtClaveProveedor.getText())) {
+        int pregunta = JOptionPane.showConfirmDialog(null, "¿Estás seguro de eliminar?");
+        
+        if (pregunta == 0) {
+            String id = txtClaveProveedor.getText();
+            boolean eliminado = proveedorDao.eliminarProveedor(id);
+            limpiarProveedor();
+            if (eliminado) {
+                JOptionPane.showMessageDialog(null, "Eliminado correctamente!!");
                 limpiarProveedor();
                 limpiarTable();
-                listarProveedor();  
+                listarProveedor();
                 cargaComboCompleto();
+            } else {
+                // No es necesario un mensaje adicional aquí porque el DAO ya muestra el mensaje de error
             }
-        }  
+        }
+    } else {
+        JOptionPane.showMessageDialog(null, "Seleccione un registro para eliminar.");
+    }
+         
     }//GEN-LAST:event_btnEliminarProveedorActionPerformed
 
     private void btnDescargarProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescargarProveedorActionPerformed
@@ -1291,13 +1407,13 @@ public class Sistema extends javax.swing.JFrame {
         int fila = tableProveedor.rowAtPoint(evt.getPoint());
         
         txtClaveProveedor.setText(tableProveedor.getValueAt(fila,0).toString());
-        txtNombreProveedor.setText(tableProveedor.getValueAt(fila,1).toString());
-        txtNombreEncargado.setText(tableProveedor.getValueAt(fila, 2).toString());
-        txtApellidoPaterno.setText(tableProveedor.getValueAt(fila, 3).toString());
-        txtApellidoMaterno.setText(tableProveedor.getValueAt(fila, 4).toString());
-        txtTelefonoProveedor.setText(tableProveedor.getValueAt(fila,5).toString());
-        txtCorreoProveedor.setText(tableProveedor.getValueAt(fila, 6).toString());
-        txtRFCProveedor.setText(tableProveedor.getValueAt(fila, 7).toString());
+        txtRFCProveedor.setText(tableProveedor.getValueAt(fila, 1).toString());
+        txtNombreProveedor.setText(tableProveedor.getValueAt(fila,2).toString());
+        txtNombreEncargado.setText(tableProveedor.getValueAt(fila, 3).toString());
+        txtApellidoPaterno.setText(tableProveedor.getValueAt(fila, 4).toString());
+        txtApellidoMaterno.setText(tableProveedor.getValueAt(fila, 5).toString());
+        txtCorreoProveedor.setText(tableProveedor.getValueAt(fila, 6).toString());    
+        txtTelefonoProveedor.setText(tableProveedor.getValueAt(fila,7).toString());
         txtCodigoPostalProveedor.setText(tableProveedor.getValueAt(fila, 8).toString());
         cbxCiudadProveedor.setSelectedItem(tableProveedor.getValueAt(fila, 9).toString());
         
@@ -1372,7 +1488,10 @@ public class Sistema extends javax.swing.JFrame {
     //Botones de acción
     private void btnAgregarAlmacenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarAlmacenActionPerformed
         
-        if (!"".equals(txtClaveMateria.getText()) || !"".equals(txtNombreMateria.getText())) {
+        if (!"".equals(txtClaveMateria.getText())&&
+            !"".equals(txtCantidadDisponible.getText()) &&
+            !"".equals(txtNombreMateria.getText()) &&
+            !"".equals(txtStockMinimo.getText())) {
            almacen.setClaveMateriaPrima(txtClaveMateria.getText());
            almacen.setNombreMateria(txtNombreMateria.getText());
            almacen.setStockMinimo(Integer.parseInt(txtStockMinimo.getText()));
@@ -1382,12 +1501,13 @@ public class Sistema extends javax.swing.JFrame {
             almacenDao.registrarAlmacen(almacen); //se manda a traer del DAO almacén la funcion registrar
             JOptionPane.showMessageDialog(null, "Materia Prima Registrada con exito!!");
             limpiarAlmacen();
+            limpiarTablaAlmacen();
             limpiarTable();
             listarAlmacen();
             
 
         } else {
-            JOptionPane.showMessageDialog(null, "Los campos estan vacios");
+            JOptionPane.showMessageDialog(null, "Hay campos vacios");
 
         }
         
@@ -1398,7 +1518,10 @@ public class Sistema extends javax.swing.JFrame {
         if("".equals(txtClaveMateria.getText())){
             JOptionPane.showMessageDialog(null, "Seleccione una fila");
         }else{  
-        if(!"".equals(txtClaveMateria.getText())||!"".equals(txtNombreMateria.getText())){
+        if(!"".equals(txtClaveMateria.getText())&&
+            !"".equals(txtCantidadDisponible.getText()) &&
+            !"".equals(txtNombreMateria.getText()) &&
+            !"".equals(txtStockMinimo.getText())){
        almacen.setClaveMateriaPrima(txtClaveMateria.getText());
        almacen.setNombreMateria(txtNombreMateria.getText());
        almacen.setStockMinimo(Integer.parseInt(txtStockMinimo.getText()));
@@ -1411,7 +1534,7 @@ public class Sistema extends javax.swing.JFrame {
         limpiarAlmacen();
         listarAlmacen();        
         }else{
-        JOptionPane.showMessageDialog(null,"Los campos estan vacios");
+        JOptionPane.showMessageDialog(null,"Hay campos vacios");
         }
       }
         
@@ -1424,17 +1547,25 @@ public class Sistema extends javax.swing.JFrame {
 
     private void btnEliminarAlmacenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarAlmacenActionPerformed
        
-         if (!"".equals(txtClaveMateria.getText())) {
-            int pregunta = JOptionPane.showConfirmDialog(null, "¿Estas seguro de eliminar?");
-            if (pregunta == 0) {
-                String id = txtClaveMateria.getText();
-               almacenDao.eliminarAlmacen(id);
-               JOptionPane.showMessageDialog(null,"Eliminado Correctamente !!");
+          if (!"".equals(txtClaveMateria.getText())) {
+        int pregunta = JOptionPane.showConfirmDialog(null, "¿Estás seguro de eliminar?");
+        
+        if (pregunta == 0) {
+            String id = txtClaveMateria.getText();
+            boolean eliminado = almacenDao.eliminarAlmacen(id);
+            limpiarAlmacen();
+            if (eliminado) {
+                JOptionPane.showMessageDialog(null, "Eliminado correctamente!!");
                 limpiarAlmacen();
                 limpiarTable();
-                listarAlmacen();  
+                listarAlmacen();
+            } else {
+                // No es necesario un mensaje adicional aquí porque el DAO ya muestra el mensaje de error
             }
         }
+    } else {
+        JOptionPane.showMessageDialog(null, "Seleccione un registro para eliminar.");
+    }
        
     }//GEN-LAST:event_btnEliminarAlmacenActionPerformed
 
@@ -1462,15 +1593,15 @@ public class Sistema extends javax.swing.JFrame {
   /*APARTDO DE INGRESO PEDIDOS 
   ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/ 
     private void btnAgregarIngresoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarIngresoActionPerformed
-      
-      if (!"".equals(txtClaveIngreso.getText()) || !"".equals(txtCantidadIngreso.getText())) {
+              
+      if (!"".equals(txtClaveIngreso.getText()) &&
+          !"".equals(txtCantidadIngreso.getText()) &&
+          !"".equals(txtCostoTotalIngreso.getText())) {
            ingresoPedidos.setClaveIngresoMaterial(txtClaveIngreso.getText());
            ingresoPedidos.setDetallePedido(txtDetalleIngreso.getText());
            ingresoPedidos.setEstado(cbEstadoIngreso.isSelected() ? 1 : 0); // 1 para activo, 0 para inactivo
            ingresoPedidos.setCantidadPedido(Integer.parseInt(txtCantidadIngreso.getText()));
-           
-          
-          
+         
            ingresoPedidos.setFechaIngreso(txtFechaIngreso.getText());
            ingresoPedidos.setCostoTotal(Float.parseFloat(txtCostoTotalIngreso.getText()));
            ingresoPedidos.setClaveProveedor(txtClaveProveedorIngreso.getText());
@@ -1479,7 +1610,7 @@ public class Sistema extends javax.swing.JFrame {
             ingresoPedidosDao.registrarIngresoPedido(ingresoPedidos); //se manda a traer del DAO Ingreso Pedidos la funcion registrar
             
             
-            actualizarCantidadIngreso();
+           
             limpiarTablaIngreso();  
             limpiarIngresoPedidos();
             if (tableIngresoPedidos.getRowCount()==0){
@@ -1492,7 +1623,7 @@ public class Sistema extends javax.swing.JFrame {
             
            
         } else {
-            JOptionPane.showMessageDialog(null, "Los campos estan vacios");
+            JOptionPane.showMessageDialog(null, "Hay campos vacios");
 
         }  
         
@@ -1503,10 +1634,15 @@ public class Sistema extends javax.swing.JFrame {
         if("".equals(txtClaveIngreso.getText())){
             JOptionPane.showMessageDialog(null, "Seleccione una fila");
         }else{  
-       if(!"".equals(txtClaveIngreso.getText())||!"".equals(txtCantidadIngreso.getText())){
+       if(!"".equals(txtClaveIngreso.getText()) &&
+          !"".equals(txtCantidadIngreso.getText()) &&
+          !"".equals(txtCostoTotalIngreso.getText())){
        ingresoPedidos.setClaveIngresoMaterial(txtClaveIngreso.getText());
        ingresoPedidos.setDetallePedido(txtDetalleIngreso.getText());
-       ingresoPedidos.setEstado(cbEstadoIngreso.isSelected() ? 1 : 0);
+       //ingresoPedidos.setEstado(cbEstadoIngreso.isSelected() ? 1 : 0);
+        int estadoOriginal = ingresoPedidos.getEstado();  // Obtener el estado original
+        int estadoNuevo = cbEstadoIngreso.isSelected() ? 1 : 0;
+       ingresoPedidos.setEstado(estadoNuevo);
        ingresoPedidos.setCantidadPedido(Integer.parseInt(txtCantidadIngreso.getText()));
        
        // Para guardar la fecha de ingreso material
@@ -1524,6 +1660,9 @@ public class Sistema extends javax.swing.JFrame {
        ingresoPedidosDao.moficarIngresoPedido(ingresoPedidos);
         JOptionPane.showMessageDialog(null,"Modificado con exito");
        
+            if (estadoOriginal != 1 && estadoNuevo == 1) {
+                actualizarCantidadIngreso();
+            }       
             limpiarTablaIngreso();  
             limpiarIngresoPedidos();
             cargaComboCompletoIngreso();
@@ -1533,7 +1672,7 @@ public class Sistema extends javax.swing.JFrame {
             limpiarTable();
             }
         }else{
-        JOptionPane.showMessageDialog(null,"Los campos estan vacios");
+        JOptionPane.showMessageDialog(null,"Hay campos vacios");
         }
       }
         
@@ -1609,6 +1748,7 @@ public class Sistema extends javax.swing.JFrame {
        
         txtClaveIngreso.setEnabled(false);
         jdcFechaIngreso.setEnabled(true);
+        cbEstadoIngreso.setEnabled(true);
       //para que cuando se seleccione una fila se muestren
      //en los txt de la parte superior
         int fila = tableIngresoPedidos.rowAtPoint(evt.getPoint());
@@ -1657,6 +1797,64 @@ public class Sistema extends javax.swing.JFrame {
         
         
     }//GEN-LAST:event_tableIngresoPedidosMouseClicked
+//Termina el apartado de  Ingreso pedidos
+ //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    
+    
+ //Inicia el apartado de las salidas 
+ //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    private void btnGenerarSalidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarSalidaActionPerformed
+
+        if (!"".equals(txtClaveSalida.getText()) &&
+            !"".equals(txtCantidadSalida.getText())) {
+            salida.setClaveSalidaMaterial(txtClaveSalida.getText());
+            salida.setCantidadSalida(Integer.parseInt(txtCantidadSalida.getText()));
+            salida.setDetalleSalida(txtDetalleSalida.getText());
+            salida.setClaveMateriaPrimaSalida(txtClaveSalidaMaterial.getText());
+           
+          salidaDao.registrarSalida(salida); //se manda a traer del DAO Salida la funcion registrar
+            JOptionPane.showMessageDialog(null, "Salida Registrada con exito!!");
+            limpiarSalidaMaterial();
+            limpiarTable();
+            listarSalida();
+            cargaComboCompletoIngreso();
+
+        } else {
+            JOptionPane.showMessageDialog(null, "Hay campos vacios");
+
+        }
+
+    }//GEN-LAST:event_btnGenerarSalidaActionPerformed
+
+    private void txtClaveSalidaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtClaveSalidaKeyReleased
+      String texto_mayuscula = txtClaveSalida.getText().toUpperCase();
+      txtClaveSalida.setText(texto_mayuscula);
+    }//GEN-LAST:event_txtClaveSalidaKeyReleased
+
+    private void txtCantidadSalidaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCantidadSalidaKeyTyped
+        if (txtCantidadSalida.getText().length() >= 3) {
+            evt.consume();
+        }
+        event.numberKeyPress(evt);
+    }//GEN-LAST:event_txtCantidadSalidaKeyTyped
+
+    private void txtDetalleSalidaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDetalleSalidaKeyReleased
+        String texto_mayuscula = txtDetalleSalida.getText().toUpperCase();
+        txtDetalleSalida.setText(texto_mayuscula);
+        
+    }//GEN-LAST:event_txtDetalleSalidaKeyReleased
+
+    private void txtClaveSalidaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtClaveSalidaKeyTyped
+        if (txtClaveSalida.getText().length() >= 9) {
+            evt.consume();
+        }
+        
+    }//GEN-LAST:event_txtClaveSalidaKeyTyped
+
+    private void btnCancelarSalidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarSalidaActionPerformed
+        limpiarSalidaMaterial();
+        cargaComboCompletoIngreso();
+    }//GEN-LAST:event_btnCancelarSalidaActionPerformed
 
     
     
@@ -1703,6 +1901,7 @@ public class Sistema extends javax.swing.JFrame {
     private javax.swing.JButton btnCancelarAlmacen;
     private javax.swing.JButton btnCancelarIngreso;
     private javax.swing.JButton btnCancelarProveedor;
+    private javax.swing.JButton btnCancelarSalida;
     private javax.swing.JButton btnDescargarAlmacen;
     private javax.swing.JButton btnDescargarIngreso;
     private javax.swing.JButton btnDescargarProveedor;
@@ -1742,6 +1941,7 @@ public class Sistema extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTabbedPane jTabbedPane1;
     private com.toedter.calendar.JDateChooser jdcFechaIngreso;
     private javax.swing.JLabel labelFecha;
@@ -1769,6 +1969,7 @@ public class Sistema extends javax.swing.JFrame {
     private javax.swing.JTable tableAlmacen;
     private javax.swing.JTable tableIngresoPedidos;
     private javax.swing.JTable tableProveedor;
+    private javax.swing.JTable tableSalida;
     private javax.swing.JTextField txtApellidoMaterno;
     private javax.swing.JTextField txtApellidoPaterno;
     private javax.swing.JTextField txtCantidadDisponible;
@@ -1780,6 +1981,7 @@ public class Sistema extends javax.swing.JFrame {
     private javax.swing.JTextField txtClaveProveedor;
     private javax.swing.JTextField txtClaveProveedorIngreso;
     private javax.swing.JTextField txtClaveSalida;
+    private javax.swing.JTextField txtClaveSalidaMaterial;
     private javax.swing.JTextField txtCodigoPostalProveedor;
     private javax.swing.JTextField txtCorreoProveedor;
     private javax.swing.JTextField txtCostoTotalIngreso;
@@ -1794,14 +1996,7 @@ public class Sistema extends javax.swing.JFrame {
     private javax.swing.JTextField txtTelefonoProveedor;
     // End of variables declaration//GEN-END:variables
 
-    // Metodos para la limpieza de cada uno de los apartados
-    // Limpieza de salida Material
-    private void limpiarSalidaMaterial() {
-        txtClaveSalida.setText("");
-        cbxClaveMaterialSalida.removeAllItems();
-        txtCantidadSalida.setText("");
-        txtDetalleSalida.setText("");
-    }
+  
     
     
     
@@ -1837,6 +2032,10 @@ public class Sistema extends javax.swing.JFrame {
         btnEliminarProveedor.setEnabled(true);
         btnDescargarProveedor.setEnabled(false);
     }
+    private void limpiarTablaProveedor() {
+    DefaultTableModel model = (DefaultTableModel) tableProveedor.getModel();
+    model.setRowCount(0); // Esta línea vacía la tabla
+    } 
     // Termina Metodos para el apartado de proveedor ***********
     
     //Inicia metodos para el apartado de Almacén ***********
@@ -1867,6 +2066,10 @@ public class Sistema extends javax.swing.JFrame {
         btnDescargarAlmacen.setEnabled(false);
     
     }
+    private void limpiarTablaAlmacen() {
+    DefaultTableModel model = (DefaultTableModel) tableAlmacen.getModel();
+    model.setRowCount(0); // Esta línea vacía la tabla
+    }  
     //Termina metodos para el apartado de proveedor****************
    
     //Inicia metodos para el apartado de Ingreso Pedidos+++++++++++++++++++
@@ -1881,11 +2084,13 @@ public class Sistema extends javax.swing.JFrame {
         txtCostoTotalIngreso.setText("");
         cbEstadoIngreso.setSelected(false);
         
+        
         agregarIngresoPedidos();
     }
     private void agregarIngresoPedidos(){
         txtClaveIngreso.setEnabled(true);
         jdcFechaIngreso.setEnabled(false);
+        cbEstadoIngreso.setEnabled(false);
         
         btnAgregarIngreso.setEnabled(true);
         btnModificarIngreso.setEnabled(false);
@@ -1906,9 +2111,7 @@ public class Sistema extends javax.swing.JFrame {
     private void limpiarTablaIngreso() {
     DefaultTableModel model = (DefaultTableModel) tableIngresoPedidos.getModel();
     model.setRowCount(0); // Esta línea vacía la tabla
-    }
-    //Termina metodos para el apartado de ingreso pedidos+++++++++++++++++++
-    
+    }   
     //Metodo para actualizar cantidad Disponible en el almacén
     //Con los datos de cantidad Ingreso 
     private void actualizarCantidadIngreso(){
@@ -1918,6 +2121,17 @@ public class Sistema extends javax.swing.JFrame {
         int stockActual = almacen.getCantidadDisp()+cant;
         ingresoPedidosDao.actualizasStock(stockActual, cod);
     }
+    //Termina metodos para el apartado de ingreso pedidos+++++++++++++++++++
+    
+    //inician metodos para el apartado de salida
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+     private void limpiarSalidaMaterial() {
+        txtClaveSalida.setText("");
+        cbxClaveMaterialSalida.removeAllItems();
+        txtCantidadSalida.setText("");
+        txtDetalleSalida.setText("");
+    }
+    
     
     
     

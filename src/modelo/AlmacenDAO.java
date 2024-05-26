@@ -99,6 +99,8 @@ public class AlmacenDAO {
             return true;
         } catch (SQLException e) {
             System.out.println(e.toString());
+            JOptionPane.showMessageDialog(null, "No es posible eliminar este registro \n "
+                    + "Está siendo utilizado", "Error de borrado", JOptionPane.WARNING_MESSAGE);
             return false;
         } finally {
             try {

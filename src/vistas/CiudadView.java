@@ -240,7 +240,7 @@ public class CiudadView extends javax.swing.JFrame {
 
     private void btnAgregarCiudadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarCiudadActionPerformed
   
-        if(!"".equals(txtCodigoPostal.getText())||!"".equals(txtNombreCiudad.getText())){
+        if(!"".equals(txtCodigoPostal.getText())&&!"".equals(txtNombreCiudad.getText())){
         ciudad.setCodPostal(txtCodigoPostal.getText());
         ciudad.setNombreCiudad(txtNombreCiudad.getText());     
         ciudadDao.registrarCiudad(ciudad); //se manda a traer del DAO ciudad la funcion registrar
@@ -261,7 +261,7 @@ public class CiudadView extends javax.swing.JFrame {
        if("".equals(txtCodigoPostal.getText())){
             JOptionPane.showMessageDialog(null, "Seleccione una fila");
         }else{  
-        if(!"".equals(txtCodigoPostal.getText())||!"".equals(txtNombreCiudad.getText())){
+        if(!"".equals(txtCodigoPostal.getText())&& !"".equals(txtNombreCiudad.getText())){
         ciudad.setCodPostal(txtCodigoPostal.getText());
         ciudad.setNombreCiudad(txtNombreCiudad.getText());
         ciudadDao.ModificarCiudad(ciudad);
@@ -324,16 +324,25 @@ public class CiudadView extends javax.swing.JFrame {
     private void btnEliminarCiudadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarCiudadActionPerformed
          
         if (!"".equals(txtCodigoPostal.getText())) {
-            int pregunta = JOptionPane.showConfirmDialog(null, "¿Estas seguro de eliminar?");
-            if (pregunta == 0) {
-                String id = txtCodigoPostal.getText();
-                ciudadDao.eliminarCliente(id);
+        int pregunta = JOptionPane.showConfirmDialog(null, "¿Estás seguro de eliminar?");
+        
+        if (pregunta == 0) {
+            String id = txtCodigoPostal.getText();
+            boolean eliminado = ciudadDao.eliminarCiudad(id);
+            limpiarCiudad();
+            if (eliminado) {
+                JOptionPane.showMessageDialog(null, "Eliminado correctamente!!");
                 limpiarCiudad();
                 limpiarTable();
-                listarCiudad();  
+                listarCiudad();
                 sistema.cargaComboCompleto();
+            } else {
+                // No es necesario un mensaje adicional aquí porque el DAO ya muestra el mensaje de error
             }
-        }  
+        }
+    } else {
+        JOptionPane.showMessageDialog(null, "Seleccione un registro para eliminar.");
+    } 
     }//GEN-LAST:event_btnEliminarCiudadActionPerformed
 
     

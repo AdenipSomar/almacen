@@ -83,7 +83,7 @@ public class CiudadDAO {
     }
 }
 
-    public boolean eliminarCliente(String id) {
+    public boolean eliminarCiudad(String id) {
         String sql = "DELETE FROM ciudad_tbl WHERE codPostal=?";
 
         try {
@@ -94,6 +94,8 @@ public class CiudadDAO {
 
         } catch (SQLException e) {
             System.out.println(e.toString());
+           JOptionPane.showMessageDialog(null, "No es posible eliminar este registro \n "
+                    + "Está siendo utilizado", "Error de borrado", JOptionPane.WARNING_MESSAGE);
             return false;
         } finally {
             try {
