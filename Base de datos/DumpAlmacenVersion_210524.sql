@@ -15,9 +15,13 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+drop database if exists almacen_db;
+create database almacen_db;
+use almacen_db;
 --
 -- Table structure for table `ciudad_tbl`
 --
+
 
 DROP TABLE IF EXISTS `ciudad_tbl`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -26,7 +30,7 @@ CREATE TABLE `ciudad_tbl` (
   `codPostal` char(5) NOT NULL,
   `nombreCiudad` varchar(100) NOT NULL,
   PRIMARY KEY (`codPostal`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -61,7 +65,7 @@ CREATE TABLE `ingresomaterial_tbl` (
   KEY `cveMateriaPrima` (`cveMateriaPrima`),
   CONSTRAINT `ingresomaterial_tbl_ibfk_1` FOREIGN KEY (`cveProveedor`) REFERENCES `proveedor_tbl` (`cveProveedor`) ON UPDATE CASCADE,
   CONSTRAINT `ingresomaterial_tbl_ibfk_2` FOREIGN KEY (`cveMateriaPrima`) REFERENCES `materiaprima_tbl` (`cveMateriaPrima`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -87,7 +91,7 @@ CREATE TABLE `materiaprima_tbl` (
   `stockMinimo` int DEFAULT NULL,
   `cantidadDisp` int NOT NULL,
   PRIMARY KEY (`cveMateriaPrima`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -120,7 +124,7 @@ CREATE TABLE `proveedor_tbl` (
   PRIMARY KEY (`cveProveedor`),
   KEY `codPostal` (`codPostal`),
   CONSTRAINT `proveedor_tbl_ibfk_1` FOREIGN KEY (`codPostal`) REFERENCES `ciudad_tbl` (`codPostal`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -149,7 +153,7 @@ CREATE TABLE `salidamaterial_tbl` (
   PRIMARY KEY (`cveSalidaMaterial`),
   KEY `cveMateriaPrima` (`cveMateriaPrima`),
   CONSTRAINT `salidamaterial_tbl_ibfk_1` FOREIGN KEY (`cveMateriaPrima`) REFERENCES `materiaprima_tbl` (`cveMateriaPrima`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -174,7 +178,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8_general_ci*/ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -218,7 +222,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -261,7 +265,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8_general_ci*/ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;

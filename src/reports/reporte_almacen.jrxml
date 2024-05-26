@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d2aace68-540e-451b-99c6-68290699d309">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="76"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#00FFFF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFFFFF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab Data Text" hAlign="Center"/>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="New Dataset 1" uuid="bcc6e44c-2e5a-4805-a3ac-e0b9c300a128">
+		<queryString language="SQL">
+			<![CDATA[SELECT * FROM almacen_db.materiaprima_tbl;]]>
+		</queryString>
+		<field name="cveMateriaPrima" class="java.lang.String"/>
+		<field name="nombreMateria" class="java.lang.String"/>
+		<field name="stockMinimo" class="java.lang.Integer"/>
+		<field name="cantidadDisp" class="java.lang.Integer"/>
+		<group name="cveMateriaPrima">
+			<groupExpression><![CDATA[$F{cveMateriaPrima}]]></groupExpression>
+		</group>
+		<group name="nombreMateria">
+			<groupExpression><![CDATA[$F{nombreMateria}]]></groupExpression>
+		</group>
+		<group name="stockMinimo">
+			<groupExpression><![CDATA[$F{stockMinimo}]]></groupExpression>
+		</group>
+		<group name="cantidadDisp">
+			<groupExpression><![CDATA[$F{cantidadDisp}]]></groupExpression>
+		</group>
+	</subDataset>
+	<queryString>
+		<![CDATA[SELECT * FROM almacen_db.materiaprima_tbl;]]>
+	</queryString>
+	<field name="cveMateriaPrima" class="java.lang.String"/>
+	<field name="nombreMateria" class="java.lang.String"/>
+	<field name="stockMinimo" class="java.lang.Integer"/>
+	<field name="cantidadDisp" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="c102bb56-4f34-4ac9-b823-1d9fa48a2d36" x="189" y="0" width="223" height="42"/>
+				<textElement>
+					<font size="24"/>
+				</textElement>
+				<text><![CDATA[Reporte Almacén]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="37" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="d002de56-d275-4630-bd3f-b00d892c8b53" x="14" y="0" width="138" height="20"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[Clave Materia Prima]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d002de56-d275-4630-bd3f-b00d892c8b53" x="165" y="0" width="100" height="20"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[Materia Prima]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d002de56-d275-4630-bd3f-b00d892c8b53" x="312" y="0" width="100" height="20"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[Stock Mínimo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d002de56-d275-4630-bd3f-b00d892c8b53" x="423" y="0" width="132" height="20"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[Cantidad Disponible]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="33" splitType="Stretch">
+			<textField>
+				<reportElement uuid="c3d54643-d43a-4da4-8d3d-a2f42853ef0f" x="29" y="0" width="102" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{cveMateriaPrima}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="c3d54643-d43a-4da4-8d3d-a2f42853ef0f" x="165" y="0" width="143" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{nombreMateria}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="c3d54643-d43a-4da4-8d3d-a2f42853ef0f" x="344" y="0" width="58" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{stockMinimo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="c3d54643-d43a-4da4-8d3d-a2f42853ef0f" x="464" y="0" width="72" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{cantidadDisp}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="539b3fa8-4d95-434f-99bf-ae87149b735b" x="38" y="24" width="488" height="1"/>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="373" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="104" splitType="Stretch">
+			<textField>
+				<reportElement uuid="159f1775-2e2c-4a5b-8948-07490871349e" x="506" y="84" width="49" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="2fc293c6-e7b0-425a-b338-35f063a7ee8a" x="449" y="84" width="57" height="20"/>
+				<textElement/>
+				<text><![CDATA[Página:]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

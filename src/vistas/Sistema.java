@@ -2,13 +2,15 @@ package vistas;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
@@ -25,6 +27,12 @@ import modelo.ProveedorDAO;
 import modelo.Salida;
 import modelo.SalidaDAO;
 import modelo.conexion;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.view.JasperViewer;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 /**
@@ -74,7 +82,10 @@ public class Sistema extends javax.swing.JFrame {
         
         cargaComboCompletoIngreso(); //Carga datos de los proveedores en el combo box 
         
-        listarSalida(); //listar las salidas  iniciando en sistema
+        if(tableSalida.getRowCount() == 0){
+            listarSalida();
+        }
+         //listar las salidas  iniciando en sistema
         
         txtCodigoPostalProveedor.setVisible(true);
         
@@ -501,19 +512,19 @@ public class Sistema extends javax.swing.JFrame {
 
         lblClaveSalida.setFont(new java.awt.Font("Britannic Bold", 0, 24)); // NOI18N
         lblClaveSalida.setText("Clave Salida: ");
-        jPanel3.add(lblClaveSalida, new org.netbeans.lib.awtextra.AbsoluteConstraints(88, 113, -1, -1));
+        jPanel3.add(lblClaveSalida, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, -1, -1));
 
         lblClaveMaterialSalida.setFont(new java.awt.Font("Britannic Bold", 0, 24)); // NOI18N
         lblClaveMaterialSalida.setText("Clave Material: ");
-        jPanel3.add(lblClaveMaterialSalida, new org.netbeans.lib.awtextra.AbsoluteConstraints(88, 195, -1, -1));
+        jPanel3.add(lblClaveMaterialSalida, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 200, -1, -1));
 
         lblCantidadSalida.setFont(new java.awt.Font("Britannic Bold", 0, 24)); // NOI18N
         lblCantidadSalida.setText("Cantidad: ");
-        jPanel3.add(lblCantidadSalida, new org.netbeans.lib.awtextra.AbsoluteConstraints(88, 264, -1, -1));
+        jPanel3.add(lblCantidadSalida, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 260, -1, -1));
 
         lblDetalleSalida.setFont(new java.awt.Font("Britannic Bold", 0, 24)); // NOI18N
         lblDetalleSalida.setText("Detalle: ");
-        jPanel3.add(lblDetalleSalida, new org.netbeans.lib.awtextra.AbsoluteConstraints(88, 349, -1, -1));
+        jPanel3.add(lblDetalleSalida, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 350, -1, -1));
 
         txtClaveSalida.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -523,23 +534,23 @@ public class Sistema extends javax.swing.JFrame {
                 txtClaveSalidaKeyTyped(evt);
             }
         });
-        jPanel3.add(txtClaveSalida, new org.netbeans.lib.awtextra.AbsoluteConstraints(271, 104, 222, 33));
+        jPanel3.add(txtClaveSalida, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 100, 222, 33));
 
         txtCantidadSalida.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txtCantidadSalidaKeyTyped(evt);
             }
         });
-        jPanel3.add(txtCantidadSalida, new org.netbeans.lib.awtextra.AbsoluteConstraints(271, 263, 222, 35));
+        jPanel3.add(txtCantidadSalida, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 260, 222, 35));
 
-        jPanel3.add(cbxClaveMaterialSalida, new org.netbeans.lib.awtextra.AbsoluteConstraints(272, 195, 221, 33));
+        jPanel3.add(cbxClaveMaterialSalida, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 200, 221, 33));
 
         txtDetalleSalida.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtDetalleSalidaKeyReleased(evt);
             }
         });
-        jPanel3.add(txtDetalleSalida, new org.netbeans.lib.awtextra.AbsoluteConstraints(271, 347, 222, 36));
+        jPanel3.add(txtDetalleSalida, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 350, 222, 36));
 
         btnGenerarSalida.setFont(new java.awt.Font("Britannic Bold", 0, 18)); // NOI18N
         btnGenerarSalida.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/agregar.png"))); // NOI18N
@@ -549,8 +560,8 @@ public class Sistema extends javax.swing.JFrame {
                 btnGenerarSalidaActionPerformed(evt);
             }
         });
-        jPanel3.add(btnGenerarSalida, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 420, 240, 43));
-        jPanel3.add(txtClaveSalidaMaterial, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 150, 100, 30));
+        jPanel3.add(btnGenerarSalida, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 420, 240, 43));
+        jPanel3.add(txtClaveSalidaMaterial, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 150, 100, 30));
 
         tableSalida.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -562,7 +573,7 @@ public class Sistema extends javax.swing.JFrame {
         ));
         jScrollPane4.setViewportView(tableSalida);
 
-        jPanel3.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 100, 520, 400));
+        jPanel3.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 100, 590, 400));
 
         btnCancelarSalida.setFont(new java.awt.Font("Britannic Bold", 0, 18)); // NOI18N
         btnCancelarSalida.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/cancelar.png"))); // NOI18N
@@ -572,7 +583,7 @@ public class Sistema extends javax.swing.JFrame {
                 btnCancelarSalidaActionPerformed(evt);
             }
         });
-        jPanel3.add(btnCancelarSalida, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 490, 160, 40));
+        jPanel3.add(btnCancelarSalida, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 490, 160, 40));
 
         jTabbedPane1.addTab("Salida Material", jPanel3);
 
@@ -1313,7 +1324,8 @@ public class Sistema extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEliminarProveedorActionPerformed
 
     private void btnDescargarProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescargarProveedorActionPerformed
-
+            generarReporteProveedor();
+            
     }//GEN-LAST:event_btnDescargarProveedorActionPerformed
 
     
@@ -1570,7 +1582,7 @@ public class Sistema extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEliminarAlmacenActionPerformed
 
     private void btnDescargarAlmacenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescargarAlmacenActionPerformed
-        // TODO add your handling code here:
+        generarReporteAlmacen();
     }//GEN-LAST:event_btnDescargarAlmacenActionPerformed
 
     private void tableAlmacenMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableAlmacenMouseClicked
@@ -1807,21 +1819,21 @@ public class Sistema extends javax.swing.JFrame {
 
         if (!"".equals(txtClaveSalida.getText()) &&
             !"".equals(txtCantidadSalida.getText())) {
-            salida.setClaveSalidaMaterial(txtClaveSalida.getText());
-            salida.setCantidadSalida(Integer.parseInt(txtCantidadSalida.getText()));
-            salida.setDetalleSalida(txtDetalleSalida.getText());
-            salida.setClaveMateriaPrimaSalida(txtClaveSalidaMaterial.getText());
-           
-          salidaDao.registrarSalida(salida); //se manda a traer del DAO Salida la funcion registrar
-            JOptionPane.showMessageDialog(null, "Salida Registrada con exito!!");
-            limpiarSalidaMaterial();
-            limpiarTable();
-            listarSalida();
-            cargaComboCompletoIngreso();
+            if (actualizarCantidadSalida()) { // Verificar y actualizar stock primero
+                salida.setClaveSalidaMaterial(txtClaveSalida.getText());
+                salida.setCantidadSalida(Integer.parseInt(txtCantidadSalida.getText()));
+                salida.setDetalleSalida(txtDetalleSalida.getText());
+                salida.setClaveMateriaPrimaSalida(txtClaveSalidaMaterial.getText());
 
+                salidaDao.registrarSalida(salida); // Se manda a traer del DAO Salida la función registrar
+                JOptionPane.showMessageDialog(null, "Salida Registrada con éxito!!");
+                limpiarSalidaMaterial();
+                limpiarTablaSalida();
+                listarSalida();
+                cargaComboCompletoIngreso();
+            }
         } else {
-            JOptionPane.showMessageDialog(null, "Hay campos vacios");
-
+            JOptionPane.showMessageDialog(null, "Hay campos vacíos");
         }
 
     }//GEN-LAST:event_btnGenerarSalidaActionPerformed
@@ -2131,8 +2143,87 @@ public class Sistema extends javax.swing.JFrame {
         txtCantidadSalida.setText("");
         txtDetalleSalida.setText("");
     }
+     private boolean actualizarCantidadSalida() {
+        int cant = Integer.parseInt(txtCantidadSalida.getText());
+        String cod = txtClaveSalidaMaterial.getText();
+        almacen = almacenDao.BuscarMateria(cod);
+        int stockActual = almacen.getCantidadDisp();
+        if (cant > stockActual) {
+            JOptionPane.showMessageDialog(null, "No hay suficiente stock disponible.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        int nuevoStock = stockActual - cant;
+        ingresoPedidosDao.actualizasStock(nuevoStock, cod);
+        return true;
+    }
+     private void limpiarTablaSalida() {
+    DefaultTableModel model = (DefaultTableModel) tableSalida.getModel();
+    model.setRowCount(0); // Esta línea vacía la tabla
+    }  
     
-    
-    
+     
+     //Apartado de reportes 
+     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //REPORTE DEL APARTADO DE ALMACÉN
+     public void generarReporteAlmacen() {
+        conexion cn = new conexion(); // instancia de conexión
+        Connection con = null;
+        try {
+            con = cn.getConnection();
+            String dir_current = System.getProperty("user.dir");
+            String filName = dir_current + "\\src\\reports\\reporte_almacen.jasper";
+            //JOptionPane.showMessageDialog(null, filName);
+
+            JasperReport reporte = (JasperReport) JRLoader.loadObjectFromFile(filName);
+            JasperPrint im = JasperFillManager.fillReport(reporte, null, con); // preparar el reporte 
+            JasperViewer ver = new JasperViewer(im, false); // visualizar el reporte 
+            ver.setTitle("Reporte Almacen");
+            ver.setVisible(true);
+        } catch (JRException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al generar el informe: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            try {
+                if (con != null) {
+                    con.close(); // cerrar la conexión
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Error al cerrar la conexión: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+     
+     //REPORTE DEL APARTADO PROVEEDOR
+         public void generarReporteProveedor() {
+        conexion cn = new conexion(); // instancia de conexión
+        Connection con = null;
+        try {
+            con = cn.getConnection();
+            String dir_current = System.getProperty("user.dir");
+            String filName = dir_current + "\\src\\reports\\reporte_proveedor.jasper";
+            //JOptionPane.showMessageDialog(null, filName);
+
+            JasperReport reporte = (JasperReport) JRLoader.loadObjectFromFile(filName);
+            JasperPrint im = JasperFillManager.fillReport(reporte, null, con); // preparar el reporte 
+            JasperViewer ver = new JasperViewer(im, false); // visualizar el reporte 
+            ver.setTitle("Reporte Proveedor");
+            ver.setVisible(true);
+        } catch (JRException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al generar el informe: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            try {
+                if (con != null) {
+                    con.close(); // cerrar la conexión
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Error al cerrar la conexión: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+     
+     
     
 }

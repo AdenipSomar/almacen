@@ -132,57 +132,6 @@ public class AlmacenDAO {
         return materias;
     }
 
-    
-    
-//    
-//    public int obtenerCantidadDisponible(String claveMateria) {
-//    int cantidadDisponible = 0;  
-//    Connection con = cn.getConnection(); // Asumiendo que tienes un método para obtener la conexión a la base de datos
-//   
-//    try {
-//        String sql = "SELECT cantidadDisp FROM materiaprima_tbl  WHERE cveMateriaPrima = ?";
-//        ps = con.prepareStatement(sql);
-//        ps.setString(1, claveMateria);
-//        rs = ps.executeQuery();
-//      
-//        if (rs.next()) {
-//            cantidadDisponible = rs.getInt("cantidadDisp");
-//        }
-//    } catch (SQLException e) {
-//        e.printStackTrace();
-//    } finally {
-//        try {
-//            if (rs != null) rs.close();
-//            if (ps != null) ps.close();
-//            if (con != null) con.close();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//    return cantidadDisponible;
-//}
-//
-//    public void actualizarCantidadDisponible(String claveMateria, int nuevaCantidad) {
-//    Connection con = cn.getConnection(); // 
-//   
-//
-//    try {
-//        String sql = "UPDATE materiaPrima_tbl SET cantidadDisp = ? WHERE cveMateriaPrima = ?";
-//        ps = con.prepareStatement(sql);
-//        ps.setInt(1, nuevaCantidad);
-//        ps.setString(2, claveMateria);
-//        ps.executeUpdate();
-//    } catch (SQLException e) {
-//        e.printStackTrace();
-//    } finally {
-//        try {
-//            if (ps != null) ps.close();
-//            if (con != null) con.close();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//}
 
     public Almacen BuscarMateria(String cod) {
         Almacen almacen = new Almacen();
