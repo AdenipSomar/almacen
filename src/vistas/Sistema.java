@@ -9,8 +9,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
@@ -185,7 +183,6 @@ public class Sistema extends javax.swing.JFrame {
     //Termina la parte del combo proveedor parte de IngresoPedidos
     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
-
     private void ObtenerFecha() {
     // Metodo para obtener la fecha  en tiempo real 
         // Actualiza la fecha cada segundo
@@ -331,6 +328,7 @@ public class Sistema extends javax.swing.JFrame {
         jScrollPane4 = new javax.swing.JScrollPane();
         tableSalida = new javax.swing.JTable();
         btnCancelarSalida = new javax.swing.JButton();
+        btnDescargarSalidaMaterial = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
@@ -560,7 +558,7 @@ public class Sistema extends javax.swing.JFrame {
                 btnGenerarSalidaActionPerformed(evt);
             }
         });
-        jPanel3.add(btnGenerarSalida, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 420, 240, 43));
+        jPanel3.add(btnGenerarSalida, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 430, 240, 43));
         jPanel3.add(txtClaveSalidaMaterial, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 150, 100, 30));
 
         tableSalida.setModel(new javax.swing.table.DefaultTableModel(
@@ -573,7 +571,7 @@ public class Sistema extends javax.swing.JFrame {
         ));
         jScrollPane4.setViewportView(tableSalida);
 
-        jPanel3.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 100, 590, 400));
+        jPanel3.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 100, 590, 320));
 
         btnCancelarSalida.setFont(new java.awt.Font("Britannic Bold", 0, 18)); // NOI18N
         btnCancelarSalida.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/cancelar.png"))); // NOI18N
@@ -583,7 +581,16 @@ public class Sistema extends javax.swing.JFrame {
                 btnCancelarSalidaActionPerformed(evt);
             }
         });
-        jPanel3.add(btnCancelarSalida, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 490, 160, 40));
+        jPanel3.add(btnCancelarSalida, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 490, 160, 40));
+
+        btnDescargarSalidaMaterial.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/descarga.png"))); // NOI18N
+        btnDescargarSalidaMaterial.setText("Descargar");
+        btnDescargarSalidaMaterial.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDescargarSalidaMaterialActionPerformed(evt);
+            }
+        });
+        jPanel3.add(btnDescargarSalidaMaterial, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 440, 170, 40));
 
         jTabbedPane1.addTab("Salida Material", jPanel3);
 
@@ -1698,7 +1705,7 @@ public class Sistema extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCancelarIngresoActionPerformed
 
     private void btnDescargarIngresoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescargarIngresoActionPerformed
-        // TODO add your handling code here:
+       generarReporteIngresoPedido();
     }//GEN-LAST:event_btnDescargarIngresoActionPerformed
 
     private void btnEliminarIngresoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarIngresoActionPerformed
@@ -1868,6 +1875,10 @@ public class Sistema extends javax.swing.JFrame {
         cargaComboCompletoIngreso();
     }//GEN-LAST:event_btnCancelarSalidaActionPerformed
 
+    private void btnDescargarSalidaMaterialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescargarSalidaMaterialActionPerformed
+       generarReporteSalida();
+    }//GEN-LAST:event_btnDescargarSalidaMaterialActionPerformed
+
     
     
     
@@ -1917,6 +1928,7 @@ public class Sistema extends javax.swing.JFrame {
     private javax.swing.JButton btnDescargarAlmacen;
     private javax.swing.JButton btnDescargarIngreso;
     private javax.swing.JButton btnDescargarProveedor;
+    private javax.swing.JButton btnDescargarSalidaMaterial;
     private javax.swing.JButton btnEliminarAlmacen;
     private javax.swing.JButton btnEliminarIngreso;
     private javax.swing.JButton btnEliminarProveedor;
@@ -2007,11 +2019,7 @@ public class Sistema extends javax.swing.JFrame {
     private javax.swing.JTextField txtStockMinimo;
     private javax.swing.JTextField txtTelefonoProveedor;
     // End of variables declaration//GEN-END:variables
-
-  
-    
-    
-    
+ 
     // Inicia Metodos para el apartado de proveedor *************
     private void limpiarProveedor() {
         
@@ -2160,8 +2168,7 @@ public class Sistema extends javax.swing.JFrame {
     DefaultTableModel model = (DefaultTableModel) tableSalida.getModel();
     model.setRowCount(0); // Esta línea vacía la tabla
     }  
-    
-     
+        
      //Apartado de reportes 
      //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     //REPORTE DEL APARTADO DE ALMACÉN
@@ -2192,10 +2199,9 @@ public class Sistema extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Error al cerrar la conexión: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
-    }
-     
+    }    
      //REPORTE DEL APARTADO PROVEEDOR
-         public void generarReporteProveedor() {
+     public void generarReporteProveedor() {
         conexion cn = new conexion(); // instancia de conexión
         Connection con = null;
         try {
@@ -2222,8 +2228,65 @@ public class Sistema extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Error al cerrar la conexión: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
+    }    
+     //REPORTE DEL APARTADO DE INGRESO/ PEDIDOSS
+     public void generarReporteIngresoPedido() {
+        conexion cn = new conexion(); // instancia de conexión
+        Connection con = null;
+        try {
+            con = cn.getConnection();
+            String dir_current = System.getProperty("user.dir");
+            String filName = dir_current + "\\src\\reports\\reporte_ingresoPedidos.jasper";
+            //JOptionPane.showMessageDialog(null, filName);
+
+            JasperReport reporte = (JasperReport) JRLoader.loadObjectFromFile(filName);
+            JasperPrint im = JasperFillManager.fillReport(reporte, null, con); // preparar el reporte 
+            JasperViewer ver = new JasperViewer(im, false); // visualizar el reporte 
+            ver.setTitle("Reporte Ingreso Pedidos");
+            ver.setVisible(true);
+        } catch (JRException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al generar el informe: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            try {
+                if (con != null) {
+                    con.close(); // cerrar la conexión
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Error al cerrar la conexión: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
-     
+     //REPORTE DEL APARTADO DE SALIDA
+     public void generarReporteSalida() {
+        conexion cn = new conexion(); // instancia de conexión
+        Connection con = null;
+        try {
+            con = cn.getConnection();
+            String dir_current = System.getProperty("user.dir");
+            String filName = dir_current + "\\src\\reports\\reporte_salida.jasper";
+            //JOptionPane.showMessageDialog(null, filName);
+
+            JasperReport reporte = (JasperReport) JRLoader.loadObjectFromFile(filName);
+            JasperPrint im = JasperFillManager.fillReport(reporte, null, con); // preparar el reporte 
+            JasperViewer ver = new JasperViewer(im, false); // visualizar el reporte 
+            ver.setTitle("Reporte Salida");
+            ver.setVisible(true);
+        } catch (JRException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al generar el informe: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            try {
+                if (con != null) {
+                    con.close(); // cerrar la conexión
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Error al cerrar la conexión: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
      
     
 }

@@ -107,18 +107,18 @@
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="79" splitType="Stretch">
+		<band height="38" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="60" splitType="Stretch">
 			<staticText>
-				<reportElement uuid="bab72e00-b7a9-4fea-8446-f4a3ee030e56" x="306" y="12" width="231" height="36"/>
+				<reportElement uuid="bab72e00-b7a9-4fea-8446-f4a3ee030e56" x="306" y="0" width="231" height="36"/>
 				<textElement>
 					<font size="24"/>
 				</textElement>
 				<text><![CDATA[Reporte Proveedor]]></text>
 			</staticText>
 		</band>
-	</title>
-	<pageHeader>
-		<band height="30" splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
 		<band height="44" splitType="Stretch">
@@ -151,7 +151,7 @@
 				<text><![CDATA[TELÉFONO]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="4ea2031b-ebf9-400e-8bdc-b546b2c6bbe5" x="667" y="0" width="81" height="20"/>
+				<reportElement uuid="4ea2031b-ebf9-400e-8bdc-b546b2c6bbe5" x="629" y="0" width="81" height="20"/>
 				<textElement>
 					<font isUnderline="false"/>
 				</textElement>
@@ -160,7 +160,7 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="48" splitType="Stretch">
+		<band height="31" splitType="Stretch">
 			<elementGroup/>
 			<textField>
 				<reportElement uuid="4a22a882-8352-4cc7-bfdd-440a4388de10" x="-10" y="0" width="90" height="20"/>
@@ -188,12 +188,12 @@
 				<textFieldExpression><![CDATA[$F{apeMatEncargado}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="2d113b7a-03fa-45fa-a071-92350093399d" x="537" y="0" width="130" height="20"/>
+				<reportElement uuid="2d113b7a-03fa-45fa-a071-92350093399d" x="537" y="0" width="81" height="20"/>
 				<textElement/>
 				<textFieldExpression><![CDATA[$F{telefonoProveedor}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="0844709c-4411-41bc-a85c-4aa1152cee51" x="672" y="0" width="129" height="20"/>
+				<reportElement uuid="0844709c-4411-41bc-a85c-4aa1152cee51" x="629" y="1" width="172" height="20"/>
 				<textElement/>
 				<textFieldExpression><![CDATA[$F{nombreCiudad}]]></textFieldExpression>
 			</textField>
@@ -203,10 +203,21 @@
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="45" splitType="Stretch"/>
+		<band height="182" splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
-		<band height="54" splitType="Stretch"/>
+		<band height="54" splitType="Stretch">
+			<textField>
+				<reportElement uuid="f7e4013e-d39e-4af9-a9d8-49e3c7595a13" x="667" y="34" width="80" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Pag. "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement uuid="d48412fd-1d8e-41cf-8687-45b7927cb18b" x="747" y="34" width="40" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
 	</pageFooter>
 	<summary>
 		<band height="42" splitType="Stretch"/>

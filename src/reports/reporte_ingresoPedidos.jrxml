@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="841" pageHeight="595" columnWidth="801" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="034e0b8c-7333-4391-a15c-fa2787392648">
+	<property name="ireport.zoom" value="1.4641000000000006"/>
+	<property name="ireport.x" value="158"/>
+	<property name="ireport.y" value="100"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="New Dataset 1" uuid="c77e9952-18c6-4ba3-bcb2-0ba7f0f55a72">
+		<queryString language="SQL">
+			<![CDATA[call almacen_db.TABLA_INGRESOMATERIAL_PROV_MAT();]]>
+		</queryString>
+		<field name="cveIngresoMaterial" class="java.lang.String"/>
+		<field name="detallePedido" class="java.lang.String"/>
+		<field name="estado" class="java.lang.Boolean"/>
+		<field name="estado_descripcion" class="java.lang.String"/>
+		<field name="cantidadPedido" class="java.lang.Integer"/>
+		<field name="fechaPedido" class="java.sql.Timestamp"/>
+		<field name="fechaIngreso" class="java.lang.String"/>
+		<field name="costoTotal" class="java.lang.Float"/>
+		<field name="cveProveedor" class="java.lang.String"/>
+		<field name="nombreProveedor" class="java.lang.String"/>
+		<field name="cveMateriaPrima" class="java.lang.String"/>
+		<field name="nombreMateria" class="java.lang.String"/>
+		<group name="cveIngresoMaterial">
+			<groupExpression><![CDATA[$F{cveIngresoMaterial}]]></groupExpression>
+		</group>
+		<group name="detallePedido">
+			<groupExpression><![CDATA[$F{detallePedido}]]></groupExpression>
+		</group>
+		<group name="estado_descripcion">
+			<groupExpression><![CDATA[$F{estado_descripcion}]]></groupExpression>
+		</group>
+		<group name="fechaPedido">
+			<groupExpression><![CDATA[$F{fechaPedido}]]></groupExpression>
+		</group>
+	</subDataset>
+	<subDataset name="procedure" uuid="916b7985-a239-427a-9eeb-d4f4687f5b47">
+		<queryString language="SQL">
+			<![CDATA[call almacen_db.TABLA_INGRESOMATERIAL_PROV_MAT();]]>
+		</queryString>
+		<field name="cveIngresoMaterial" class="java.lang.String"/>
+		<field name="detallePedido" class="java.lang.String"/>
+		<field name="estado" class="java.lang.Boolean"/>
+		<field name="estado_descripcion" class="java.lang.String"/>
+		<field name="cantidadPedido" class="java.lang.Integer"/>
+		<field name="fechaPedido" class="java.sql.Timestamp"/>
+		<field name="fechaIngreso" class="java.lang.String"/>
+		<field name="costoTotal" class="java.lang.Float"/>
+		<field name="cveProveedor" class="java.lang.String"/>
+		<field name="nombreProveedor" class="java.lang.String"/>
+		<field name="cveMateriaPrima" class="java.lang.String"/>
+		<field name="nombreMateria" class="java.lang.String"/>
+		<group name="cveIngresoMaterial">
+			<groupExpression><![CDATA[$F{cveIngresoMaterial}]]></groupExpression>
+		</group>
+		<group name="detallePedido">
+			<groupExpression><![CDATA[$F{detallePedido}]]></groupExpression>
+		</group>
+		<group name="estado">
+			<groupExpression><![CDATA[$F{estado}]]></groupExpression>
+		</group>
+		<group name="estado_descripcion">
+			<groupExpression><![CDATA[$F{estado_descripcion}]]></groupExpression>
+		</group>
+	</subDataset>
+	<queryString>
+		<![CDATA[call almacen_db.TABLA_INGRESOMATERIAL_PROV_MAT();]]>
+	</queryString>
+	<field name="cveIngresoMaterial" class="java.lang.String"/>
+	<field name="detallePedido" class="java.lang.String"/>
+	<field name="estado" class="java.lang.Boolean"/>
+	<field name="estado_descripcion" class="java.lang.String"/>
+	<field name="cantidadPedido" class="java.lang.Integer"/>
+	<field name="fechaPedido" class="java.sql.Timestamp"/>
+	<field name="fechaIngreso" class="java.lang.String"/>
+	<field name="costoTotal" class="java.lang.Float"/>
+	<field name="cveProveedor" class="java.lang.String"/>
+	<field name="nombreProveedor" class="java.lang.String"/>
+	<field name="cveMateriaPrima" class="java.lang.String"/>
+	<field name="nombreMateria" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="42" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="69" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="85089d85-ca45-4825-a619-333c0b295dc2" x="236" y="0" width="315" height="40"/>
+				<textElement>
+					<font size="24"/>
+				</textElement>
+				<text><![CDATA[Reporte Ingresos / Pedidos]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="48" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="d1035f70-2dab-4557-aaf2-c0ca61f6f6f4" x="-8" y="0" width="100" height="39"/>
+				<textElement/>
+				<text><![CDATA[CLAVE
+INGRESO/PEDIDO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d1035f70-2dab-4557-aaf2-c0ca61f6f6f4" x="96" y="0" width="100" height="39"/>
+				<textElement/>
+				<text><![CDATA[DETALLE
+PEDIDO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d1035f70-2dab-4557-aaf2-c0ca61f6f6f4" x="213" y="0" width="100" height="39"/>
+				<textElement/>
+				<text><![CDATA[ESTADO
+PEDIDO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d1035f70-2dab-4557-aaf2-c0ca61f6f6f4" x="307" y="0" width="76" height="39"/>
+				<textElement/>
+				<text><![CDATA[CANTIDAD
+PEDIDO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d1035f70-2dab-4557-aaf2-c0ca61f6f6f4" x="393" y="0" width="80" height="39"/>
+				<textElement/>
+				<text><![CDATA[FECHA DEL
+PEDIDO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d1035f70-2dab-4557-aaf2-c0ca61f6f6f4" x="495" y="0" width="80" height="39"/>
+				<textElement/>
+				<text><![CDATA[FECHA DE
+INGRESO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d1035f70-2dab-4557-aaf2-c0ca61f6f6f4" x="597" y="0" width="80" height="39"/>
+				<textElement/>
+				<text><![CDATA[MATERIA 
+PRIMA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d1035f70-2dab-4557-aaf2-c0ca61f6f6f4" x="723" y="0" width="80" height="39"/>
+				<textElement/>
+				<text><![CDATA[COSTO
+TOTAL]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="31" splitType="Stretch">
+			<textField>
+				<reportElement uuid="ee199b22-a8c1-47b9-a646-3d30dbc2ed49" x="0" y="0" width="88" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{cveIngresoMaterial}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="91821655-c88b-4a83-81e2-1e67d7a0974f" x="723" y="0" width="90" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{costoTotal}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="ba821020-3c14-4e2b-aa62-89d531ea7261" x="314" y="0" width="65" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{cantidadPedido}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="40df1251-8ca5-40c9-8568-0f960aa655da" x="497" y="0" width="90" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{fechaIngreso}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="bbb98204-9703-4f02-867d-d7c89346a7bf" x="597" y="0" width="143" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{nombreMateria}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="e127d959-41a4-44c1-8241-2c243e406efc" x="70" y="0" width="147" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{detallePedido}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="5c42f4c3-8ea0-484b-ac4c-1ce32ae9adc7" x="217" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{estado_descripcion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="19110142-27e8-4d2f-9be9-6d9debca8957" x="398" y="0" width="90" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{fechaPedido}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="b3da6ceb-e0e2-4b7b-9d8e-f5eacb5e2562" x="-3" y="22" width="801" height="1"/>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="167" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch">
+			<textField>
+				<reportElement uuid="1dddbdea-97c2-446d-b514-bdd31b0282e2" x="677" y="34" width="80" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Pag. "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement uuid="eb24298f-a4de-4745-83cd-3f8d94a88794" x="757" y="34" width="40" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

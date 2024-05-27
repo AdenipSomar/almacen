@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="dd451df2-2416-4296-9f9c-2e6af58ee687">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="dataset" uuid="42151f75-0412-4ff1-b5e2-ec0a3d18c79e">
+		<queryString language="SQL">
+			<![CDATA[SELECT 
+        sm.cveSalidaMaterial,
+		mp.nombreMateria, 
+        sm.cantidadSalida,
+		sm.detalleSalida,
+        sm.fechaSalida
+    FROM 
+        salidaMaterial_tbl sm
+    INNER JOIN 
+        materiaPrima_tbl mp ON sm.cveMateriaPrima = mp.cveMateriaPrima;]]>
+		</queryString>
+		<field name="cveSalidaMaterial" class="java.lang.String"/>
+		<field name="nombreMateria" class="java.lang.String"/>
+		<field name="cantidadSalida" class="java.lang.Integer"/>
+		<field name="detalleSalida" class="java.lang.String"/>
+		<field name="fechaSalida" class="java.sql.Timestamp"/>
+		<group name="cveSalidaMaterial">
+			<groupExpression><![CDATA[$F{cveSalidaMaterial}]]></groupExpression>
+		</group>
+		<group name="nombreMateria">
+			<groupExpression><![CDATA[$F{nombreMateria}]]></groupExpression>
+		</group>
+		<group name="cantidadSalida">
+			<groupExpression><![CDATA[$F{cantidadSalida}]]></groupExpression>
+		</group>
+		<group name="detalleSalida">
+			<groupExpression><![CDATA[$F{detalleSalida}]]></groupExpression>
+		</group>
+	</subDataset>
+	<queryString>
+		<![CDATA[SELECT 
+        sm.cveSalidaMaterial,
+		mp.nombreMateria, 
+        sm.cantidadSalida,
+		sm.detalleSalida,
+        sm.fechaSalida
+    FROM 
+        salidaMaterial_tbl sm
+    INNER JOIN 
+        materiaPrima_tbl mp ON sm.cveMateriaPrima = mp.cveMateriaPrima;]]>
+	</queryString>
+	<field name="cveSalidaMaterial" class="java.lang.String"/>
+	<field name="nombreMateria" class="java.lang.String"/>
+	<field name="cantidadSalida" class="java.lang.Integer"/>
+	<field name="detalleSalida" class="java.lang.String"/>
+	<field name="fechaSalida" class="java.sql.Timestamp"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="32" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="57" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="e146bbee-ece6-40ad-82d3-2311497c2580" x="178" y="0" width="210" height="45"/>
+				<textElement>
+					<font size="24"/>
+				</textElement>
+				<text><![CDATA[Reporte salidas]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="41" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="719e5d84-8a99-479e-af9a-df39f31f61fd" x="0" y="0" width="68" height="34"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[CLAVE
+SALIDA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="719e5d84-8a99-479e-af9a-df39f31f61fd" x="68" y="0" width="68" height="34"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[MATERIA 
+PRIMA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="719e5d84-8a99-479e-af9a-df39f31f61fd" x="244" y="0" width="92" height="34"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[CANTIDAD DE
+SALIDA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="719e5d84-8a99-479e-af9a-df39f31f61fd" x="336" y="0" width="68" height="34"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[DETALLE
+SALIDA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="719e5d84-8a99-479e-af9a-df39f31f61fd" x="440" y="0" width="68" height="34"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[FECHA
+SALIDA]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="29" splitType="Stretch">
+			<textField>
+				<reportElement uuid="f369f40d-d58b-4674-ac24-7ea8ec53570c" x="0" y="0" width="89" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{cveSalidaMaterial}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="1e46bf25-b191-48d6-8036-8ce996d86918" x="256" y="0" width="56" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{cantidadSalida}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="d754e98f-de4e-4964-b078-02382d414666" x="68" y="0" width="188" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{nombreMateria}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="c86d1f5b-bec6-4566-a36a-45fda769c06c" x="320" y="0" width="120" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{detalleSalida}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="beab5ec7-5b25-470e-a12b-c48e7792c2de" x="440" y="0" width="115" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{fechaSalida}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="f53a71ec-5254-46cc-bfec-15bd7c953456" x="19" y="23" width="508" height="1"/>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="241" splitType="Stretch">
+			<textField>
+				<reportElement uuid="b09a8f1f-3c9c-4982-a93f-66fdc246df15" x="428" y="221" width="80" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Pag. "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement uuid="ee5b0c2f-eada-407b-809a-d641a2e1b8bf" x="508" y="221" width="40" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
