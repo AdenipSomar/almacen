@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
@@ -65,7 +66,8 @@ public class Sistema extends javax.swing.JFrame {
 
     public Sistema() {
         initComponents();
-
+        setIconImage(new ImageIcon(getClass().getResource("/img/almacen.png")).getImage());//icono de imagen
+        this.setTitle("Sistema de almacén Tortillería Shtii Dxii Jmaa");
         this.setLocationRelativeTo(null);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

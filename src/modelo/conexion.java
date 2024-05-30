@@ -11,9 +11,9 @@ import javax.swing.JOptionPane;
  * @author ramos
  */
 public class conexion {
-      private static final String DB_URL = "jdbc:mysql://localhost:3307/almacen_db?serverTimezone=UTC";
+      private static final String DB_URL = "jdbc:mysql://localhost:3306/almacen_db?serverTimezone=UTC";
     private static final String USERNAME = "root";
-    private static final String PASSWORD = "";
+    private static final String PASSWORD = "12345";
     public static Connection getConnection() {
         Connection con = null;
         try {
