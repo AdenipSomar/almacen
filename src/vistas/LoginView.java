@@ -4,6 +4,7 @@ package vistas;
 import com.sun.glass.events.KeyEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+import javax.swing.*;
 
 /**
  *
@@ -12,11 +13,11 @@ import javax.swing.JOptionPane;
 public class LoginView extends javax.swing.JFrame {
  // Arreglo bidimensional para almacenar usuarios y contraseñas
     private static final String[][] userCredentials = {
-        {"rosita.santiago", "rositasantiago"},
-        {"admin", "admin"},
-        {"respaldo", "respaldo"}
+        {"rosita.santiago", "administradortortilleria"},
+        {"admin", "administradorjoa"},
+        {"respaldo", "administradorrespaldo"}
     };
-    
+       
     public LoginView() {
         initComponents();
         setIconImage(new ImageIcon(getClass().getResource("/img/user.png")).getImage());//icono de imagen
@@ -24,11 +25,9 @@ public class LoginView extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         this.setTitle("Inicio de sesión Tortillería Shtii Dxii Jma");
-        
-        
+     
     }
-    
-    private void iniciarSesion() {
+     private void iniciarSesion() {
         // Simulación de componentes de la interfaz gráfica
         String usuario = txtUsuario.getText();
         String contrasena = txtContrasenia.getText();
@@ -45,15 +44,21 @@ public class LoginView extends javax.swing.JFrame {
             if (authenticated) {
                 txtUsuario.setText("");
                 txtContrasenia.setText("");
-               //this.dispose();
+               this.dispose();
                 JOptionPane.showMessageDialog(null, "Ingresado correctamente");
+                Sistema sistema = new Sistema();
+                sistema.setVisible(true);
             } else {
                 JOptionPane.showMessageDialog(null, "Nombre de usuario o contraseña incorrectos", "Iniciar sesión", JOptionPane.ERROR_MESSAGE);
+                txtUsuario.setText("");
+                txtContrasenia.setText("");
             }
         } else {
             JOptionPane.showMessageDialog(null, "Hay campos vacíos", "Iniciar sesión", JOptionPane.WARNING_MESSAGE);
         }
     }
+
+   
 
     
     @SuppressWarnings("unchecked")

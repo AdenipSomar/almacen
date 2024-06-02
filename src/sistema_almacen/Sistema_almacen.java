@@ -1,6 +1,7 @@
 
 package sistema_almacen;
 
+import vistas.LoginView;
 import vistas.Sistema;
 
 /**
@@ -12,9 +13,10 @@ public class Sistema_almacen {
     
     public static void main(String[] args) {
         
-        
-        Sistema sistema = new Sistema();
-        sistema.setVisible(true);
+        LoginView login = new LoginView();
+        login.setVisible(true);
+//        Sistema sistema = new Sistema();
+//        sistema.setVisible(true);
         
         
     }
