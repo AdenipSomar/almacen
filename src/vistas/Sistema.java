@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
@@ -58,38 +59,49 @@ public class Sistema extends javax.swing.JFrame {
     //eventos de teclado
     Eventos event = new Eventos();
 
+   
     DefaultTableModel modelo = new DefaultTableModel(); //se crea el modelo para las tablas para listar
     DefaultTableModel tmp = new DefaultTableModel();
     private Connection con;
     
-    
-
-    public Sistema() {
+      public Sistema() {
         initComponents();
+        initCommonComponents();
+    }
+
+    public Sistema(String usuario) {
+        initComponents();
+        initCommonComponents();
+        lblUsuario.setText(usuario);
+        this.setTitle("Sistema de almacén Tortillería Shtii Dxii Jmaa  " + "  Usuario:  " + usuario);
+       
+    }
+ private void initCommonComponents() {
         setIconImage(new ImageIcon(getClass().getResource("/img/almacen.png")).getImage());//icono de imagen
-        this.setTitle("Sistema de almacén Tortillería Shtii Dxii Jmaa");
+        
         this.setLocationRelativeTo(null);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ObtenerFecha();
         con = conexion.getConnection();
 
-        //para que se pueda completar la información de los combos
+        // para que se pueda completar la información de los combos
         AutoCompleteDecorator.decorate(cbxCiudadProveedor);
         AutoCompleteDecorator.decorate(cbxProveedorIngreso);
-        
+
         cargaComboCompleto(); // Cargar datos de las ciudades en el combo box
-        
-        cargaComboCompletoIngreso(); //Carga datos de los proveedores en el combo box 
-        
-        if(tableSalida.getRowCount() == 0){
-            listarSalida();
+        cargaComboCompletoIngreso(); // Cargar datos de los proveedores en el combo box
+
+        if (tableSalida.getRowCount() == 0) {
+            listarSalida();// listar las salidas iniciando en sistema
         }
-         //listar las salidas  iniciando en sistema
         
-        txtCodigoPostalProveedor.setVisible(true);
-        
-       
+
+        txtCodigoPostalProveedor.setVisible(false);
+        txtClaveSalidaMaterial.setVisible(false);
+        txtClaveProveedorIngreso.setVisible(false);
+        txtClaveMateriaIngreso.setVisible(false);
+        txtFechaIngreso.setVisible(false);
     }
 
     //Parte de carga del combo de  ciudad en la parte de Proveedor
@@ -311,6 +323,8 @@ public class Sistema extends javax.swing.JFrame {
         btnAlmacen = new javax.swing.JButton();
         btnProveedor = new javax.swing.JButton();
         btnPedidos = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        lblUsuario = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         labelFecha = new javax.swing.JLabel();
@@ -442,23 +456,36 @@ public class Sistema extends javax.swing.JFrame {
             }
         });
 
+        jLabel2.setFont(new java.awt.Font("Britannic Bold", 0, 24)); // NOI18N
+        jLabel2.setText("Bienvenido:");
+
+        lblUsuario.setFont(new java.awt.Font("Britannic Bold", 0, 24)); // NOI18N
+        lblUsuario.setText("jLabel6");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(44, 44, 44)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnPedidos, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
-                    .addComponent(btnProveedor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnAlmacen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnSalidaMaterial, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE))
-                .addContainerGap(77, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(btnPedidos, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
+                        .addComponent(btnProveedor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnAlmacen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnSalidaMaterial, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(187, 187, 187)
+                .addGap(86, 86, 86)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29)
                 .addComponent(btnSalidaMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(43, 43, 43)
                 .addComponent(btnAlmacen, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1951,6 +1978,7 @@ public class Sistema extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -1992,6 +2020,7 @@ public class Sistema extends javax.swing.JFrame {
     private javax.swing.JLabel lblRFCProveedor;
     private javax.swing.JLabel lblStockMinimo;
     private javax.swing.JLabel lblTelefonoProveedor;
+    private javax.swing.JLabel lblUsuario;
     private javax.swing.JTable tableAlmacen;
     private javax.swing.JTable tableIngresoPedidos;
     private javax.swing.JTable tableProveedor;

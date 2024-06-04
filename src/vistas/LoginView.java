@@ -12,7 +12,7 @@ import javax.swing.*;
  */
 public class LoginView extends javax.swing.JFrame {
  // Arreglo bidimensional para almacenar usuarios y contraseñas
-    private static final String[][] userCredentials = {
+    public static final String[][] userCredentials = {
         {"rosita.santiago", "administradortortilleria"},
         {"admin", "administradorjoa"},
         {"respaldo", "administradorrespaldo"}
@@ -27,7 +27,7 @@ public class LoginView extends javax.swing.JFrame {
         this.setTitle("Inicio de sesión Tortillería Shtii Dxii Jma");
      
     }
-     private void iniciarSesion() {
+     public void iniciarSesion() {
         // Simulación de componentes de la interfaz gráfica
         String usuario = txtUsuario.getText();
         String contrasena = txtContrasenia.getText();
@@ -46,7 +46,7 @@ public class LoginView extends javax.swing.JFrame {
                 txtContrasenia.setText("");
                this.dispose();
                 JOptionPane.showMessageDialog(null, "Ingresado correctamente");
-                Sistema sistema = new Sistema();
+                Sistema sistema = new Sistema(usuario);
                 sistema.setVisible(true);
             } else {
                 JOptionPane.showMessageDialog(null, "Nombre de usuario o contraseña incorrectos", "Iniciar sesión", JOptionPane.ERROR_MESSAGE);
