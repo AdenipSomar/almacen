@@ -1867,6 +1867,8 @@ public class Sistema extends javax.swing.JFrame {
                 limpiarTablaSalida();
                 listarSalida();
                 cargaComboCompletoIngreso();
+                limpiarTablaAlmacen();
+                listarAlmacen();
             }
         } else {
             JOptionPane.showMessageDialog(null, "Hay campos vacíos");
