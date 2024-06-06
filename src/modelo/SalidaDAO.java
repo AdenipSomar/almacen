@@ -33,6 +33,7 @@ public class SalidaDAO {
           ps.setString(1,sal.getClaveSalidaMaterial());
           ps.setInt(2,sal.getCantidadSalida());
           ps.setString(3,sal.getDetalleSalida() );
+          
           ps.setString(4,sal.getClaveMateriaPrimaSalida());
           ps.execute();
           return true;         
